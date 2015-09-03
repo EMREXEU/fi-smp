@@ -34,7 +34,7 @@ public class PDFController {
 
 
         final String decodedXml = (String) context.getSession().getAttribute("elmoxmlstring");
-        System.out.println("elmo: " + decodedXml);
+        //System.out.println("elmo: " + decodedXml);
     
 
         new PdfGen().generatePdf(decodedXml, "/tmp/elmo.pdf");

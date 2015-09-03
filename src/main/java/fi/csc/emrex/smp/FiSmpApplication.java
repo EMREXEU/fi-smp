@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,7 @@ import java.util.stream.Collectors;
 @SpringBootApplication
 @Controller
 @EnableAutoConfiguration(exclude = {
-        org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class,
-        org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration.class
+        org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class
 })
 public class FiSmpApplication {
 
@@ -64,13 +64,12 @@ public class FiSmpApplication {
 
     @RequestMapping(value="/elmo", method= RequestMethod.POST)
     @ResponseBody
-    public String elmo(@ModelAttribute ElmoData request, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie) throws Exception {
+    public FileSystemResource elmo(@ModelAttribute ElmoData request, HttpServletResponse response, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie) throws Exception {
 
         String sessionId = request.getSessionId();
         String elmo = request.getElmo();
 
         final String decodedXml = new String(Base64.getDecoder().decode(elmo));
-
 
         System.out.println("elmo: " + decodedXml);
         System.out.println("providedSessionId: " + sessionId);
@@ -80,7 +79,10 @@ public class FiSmpApplication {
         new PdfGen().generatePdf(decodedXml, "/tmp/elmo.pdf");
 //        new PdfConverter().writeTextFile(elmo);
 
-        return "success";
+        response.setHeader("Content-disposition", "attachment;filename=elmo.pdf");
+        response.setContentType("application/pdf");
+
+        return new FileSystemResource("/tmp/elmo.pdf");
     }
 
     private void verifySessionId(String providedSessionId, String expectedSessionId) {
@@ -93,25 +95,17 @@ public class FiSmpApplication {
     }
 
     @RequestMapping(value="/toNCP", method= RequestMethod.POST)
-    @ResponseBody
-    public String toNCP(@ModelAttribute NCPChoice choice, HttpServletResponse response) throws Exception {
+    public String toNCP(@ModelAttribute NCPChoice choice, Model model, HttpServletResponse response) throws Exception {
+
+        System.out.println("toNCP");
 
         response.addCookie(new Cookie("elmoSessionId", context.getSession().getId()));
 
-//        Map<String,Object> model = new HashMap<>();
-//        model.put("url", choice.getUrl());
-//        model.put("sessionId", context.getSession().getId());
-//        model.put("returnUrl", "http://localhost:9002/elmo");
-//        return model;
+        model.addAttribute("url", choice.getUrl());
+        model.addAttribute("sessionId", context.getSession().getId());
+        model.addAttribute("returnUrl", "http://localhost:9002/elmo");
 
-        String html = "<html><head/><body>";
-//        html+="<form  action=\""+choice.getUrl()+"\" method=\"POST\">\n";
-        html += "<form  action=\"http://localhost:8080/norex\" method=\"POST\">\n";
-        html += "<input type=\"hidden\" name=\"sessionId\" value=\"" + context.getSession().getId() + "\">\n";
-        html += "<input type=\"hidden\" name=\"returnUrl\" value=\"http://localhost:9002/elmo\">\n";
-        html += "</select><input type=\"submit\"></form>";
-        html += "</body></html>";
-        return html;
+        return "toNCP";
     }
 
     public static void main(String[] args) {

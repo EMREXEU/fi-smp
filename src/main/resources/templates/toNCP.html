@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head/>
+    <body>
+        <form action="#" th:action="${url}" method="POST">
+            <input class="form-control" type="hidden" th:value="${sessionId}" id="sessionId" name="sessionId" />
+            <input class="form-control" type="hidden" th:value="${returnUrl}" id="returnUrl" name="returnUrl" />
+            <input type="submit"/>
+        </form>
+    </body>
+</html>

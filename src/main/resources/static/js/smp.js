@@ -48,6 +48,7 @@ app.controller(
         $http.post('/toNCP/').success(function(data) {
             console.log("toNCP");
             $scope.greeting = data;
+            //$window.location.href= "#elmo";
         })
 });
 

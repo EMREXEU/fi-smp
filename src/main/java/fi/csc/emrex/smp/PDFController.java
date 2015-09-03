@@ -6,7 +6,9 @@
 package fi.csc.emrex.smp;
 
 import java.util.Base64;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,19 +24,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class PDFController {
-        @RequestMapping(value="/elmo", method= RequestMethod.POST)
+    
+    @Autowired
+    private HttpServletRequest context;
+
+    @RequestMapping(value="/elmo", method= RequestMethod.GET)
     @ResponseBody
-    public FileSystemResource elmo(@ModelAttribute ElmoData request, HttpServletResponse response, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie) throws Exception {
+    public FileSystemResource elmo( HttpServletResponse response, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie) throws Exception{
 
-        String sessionId = request.getSessionId();
-        String elmo = request.getElmo();
 
-        final String decodedXml = new String(Base64.getDecoder().decode(elmo));
-
+        final String decodedXml = (String) context.getSession().getAttribute("elmoxmlstring");
         System.out.println("elmo: " + decodedXml);
-        System.out.println("providedSessionId: " + sessionId);
-
-        FiSmpApplication.verifySessionId(sessionId, sessionIdCookie);
+    
 
         new PdfGen().generatePdf(decodedXml, "/tmp/elmo.pdf");
 //        new PdfConverter().writeTextFile(elmo);

@@ -88,8 +88,20 @@ public class ThymeController {
             return "error";
         }
         context.getSession().setAttribute("elmoxmlstring", decodedXml);
-        model.addAttribute("elmoXml", decodedXml);
+        //model.addAttribute("elmoXml", decodedXml);
         return "onReturn";
+    }
+    @RequestMapping(value = "/review", method = RequestMethod.POST)
+    public String rewiew(@ModelAttribute User user, Model model){
+        
+        String elmoString  = (String) context.getSession().getAttribute("elmoxmlstring");
+        model.addAttribute("elmoXml", elmoString);
+        String name = getUserFromElmo(elmoString);
+        if (! user.getName().equals(name) ){
+                model.addAttribute("error", "<p>Username deosn't not match elmo</p>");
+        }
+        
+        return "review";
     }
 
     private String getPubKeyByReturnUrl(String returnUrl) throws Exception {
@@ -122,6 +134,11 @@ public class ThymeController {
         )).collect(Collectors.toList());
         context.getSession().setAttribute("ncps", results);
         return results;
+    }
+
+    private String getUserFromElmo(String elmoString) {
+        return "";
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

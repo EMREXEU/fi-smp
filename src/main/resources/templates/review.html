@@ -12,11 +12,10 @@ and open the template in the editor.
     </head>
     <body>
         <div>
-            <form action="/review" method="POST">
-                <input type="text" name="name" >Name:</input>
-                <input type="text" name="password" >Password:</input>
-                <input type="submit"/>
-            </form>
-        </div>
+            <p th:text="${error}" />
+            <p th:text="${elmoXml}" />
+            <p><a href="/elmo">Download PDF</a></p>
+            </div>
+        
     </body>
 </html>

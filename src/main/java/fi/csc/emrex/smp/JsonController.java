@@ -10,9 +10,11 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,9 @@ public class JsonController {
     
     @Value("${emrex.emreg_url}")
     private String emregUrl;
+    
+    @Autowired
+    private HttpServletRequest context;
 
     @RequestMapping("/smp")
     @ResponseBody
@@ -41,8 +46,10 @@ public class JsonController {
         List<NCPResult> results = ncp_list.stream().map(ncp -> new NCPResult(
                 (String) ncp.get("countryCode"),
                 (String) ncp.get("acronym"),
-                (String) ncp.get("url"))).collect(Collectors.toList());
-
+                (String) ncp.get("url"),
+                (String) ncp.get("pubKey")
+        )).collect(Collectors.toList());
+        //context.getSession().setAttribute("ncps", results);
         return results;
     }
         

@@ -11,7 +11,17 @@ package fi.csc.emrex.smp;
  * @author salum
  */
 public class NCPChoice {
+    private int ID;
     private String url;
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
 
     public String getUrl() {
         return url;

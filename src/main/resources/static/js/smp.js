@@ -1,11 +1,11 @@
-app = angular.module('smp', [ 'ngRoute' ]);
+app = angular.module('smp', ['ngRoute']);
 
-app.config(function($routeProvider, $httpProvider, $locationProvider) {
+app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 
     $routeProvider.
         when('/', {
-            templateUrl : 'partials/select_ncp.html',
-            controller : 'home'
+            templateUrl: 'partials/select_ncp.html',
+            controller: 'home'
         }).
         when('/toNCP', {
             templateUrl: 'partials/to_ncp.html',
@@ -16,12 +16,12 @@ app.config(function($routeProvider, $httpProvider, $locationProvider) {
             controller: 'doLogin'
         }).
         when('/norex', {
-            templateUrl : 'partials/login.html',
-            controller : 'norex'
+            templateUrl: 'partials/login.html',
+            controller: 'norex'
         }).
         when('/elmo', {
-            templateUrl : 'partials/to_ncp.html',
-            controller : 'elmo'
+            templateUrl: 'partials/to_ncp.html',
+            controller: 'elmo'
         }).
         otherwise({
             redirectTo: '/'
@@ -31,57 +31,44 @@ app.config(function($routeProvider, $httpProvider, $locationProvider) {
 
 });
 
-app.controller(
-    'home',
-    function($scope, $http) {
-
-        $http.get('/smp/').success(function(data) {
-            console.log("HOME");
-            $scope.ncps = data;
-        })
-
+app.controller('home', function ($scope, $http) {
+    console.log("HOME");
+    $http.get('/smp/').success(function (data) {
+        $scope.ncps = data;
+    })
 });
 
-app.controller(
-    'toNCP',
-    function($scope, $http, $location) {
-        $http.post('/toNCP/').success(function(data) {
-            console.log("toNCP");
-            $scope.greeting = data;
-            //$window.location.href= "#elmo";
-        })
+app.controller('toNCP', function ($scope, $http, $location) {
+    console.log("toNCP");
+    $http.post('/toNCP/').success(function (data) {
+
+        $scope.greeting = data;
+    })
 });
 
-app.controller(
-    'login',
-    function($scope, $http) {
-        $http.get('/login/').success(function(data) {
-            $location.path('/elmo/');
-            console.log(data);
-            $scope.greeting = data;
-        })
-    }
-);
+app.controller('login', function ($scope, $http) {
+    $http.get('/login/').success(function (data) {
+        $location.path('/elmo/');
+        console.log(data);
+        $scope.greeting = data;
+    })
+});
 
-app.controller(
-    'doLogin',
-    function($scope, $http, $location, $window) {
-        $http.post('/doLogin/').success(function(data) {
-            $scope.greeting = data;
-            $window.location.href= "#elmo";
-        })
-    }
-);
+app.controller('doLogin', function ($scope, $http, $location, $window) {
+    console.log("doLogin");
+    $http.post('/doLogin/').success(function (data) {
+        $scope.greeting = data;
+        $window.location.href = "#elmo";
+    })
+});
 
-app.controller(
-    'elmo',
-    function($scope, $http) {
-        $http.post('/elmo/').success(function(data) {
-            console.log(data);
-            $scope.greeting = data;
-        })
-    }
-);
+app.controller('elmo', function ($scope, $http) {
+    console.log("Elmo");
+    $http.post('/elmo/').success(function (data) {
+        console.log(data);
+        $scope.greeting = data;
+    })
+});
 
 
 

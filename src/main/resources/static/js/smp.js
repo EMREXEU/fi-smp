@@ -37,6 +37,7 @@ app.controller(
 
         $http.get('/smp/').success(function(data) {
             console.log("HOME");
+            console.log("data" + JSON.stringify(data));
             $scope.ncps = data;
         })
 

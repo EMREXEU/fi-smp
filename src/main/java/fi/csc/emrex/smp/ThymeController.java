@@ -40,6 +40,10 @@ public class ThymeController {
     @Value("${emrex.emreg_url}")
     private String emregUrl;
 
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String smp() throws Exception {
+        return "smp";
+    }
     @RequestMapping(value = "/toNCP", method = RequestMethod.POST)
     public String toNCP(@ModelAttribute NCPChoice choice, Model model, HttpServletResponse response) throws Exception {
 

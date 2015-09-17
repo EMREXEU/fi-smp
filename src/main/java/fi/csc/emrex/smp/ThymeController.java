@@ -62,6 +62,7 @@ public class ThymeController {
 
         model.addAttribute("url", choice.getUrl());
         model.addAttribute("sessionId", context.getSession().getId());
+        //TODO Configure this to be dependent on the environem
         model.addAttribute("returnUrl", "http://localhost:9002/onReturn");
         response.addCookie(new Cookie("chosenNCP", choice.getUrl()));
 

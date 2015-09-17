@@ -5,10 +5,12 @@
             <td>{{ x.acronym }}</td>
             <td>{{ x.url }}</td>
         </tr>
+        
     </table>
-    <form name="myForm" action="/toNCP" method="POST">
+    <form name="myForm" action="/smp/toNCP" method="POST">
         <select name="url">
             <option ng-repeat="x in ncps" value="{{ x.url }}">{{ x.acronym }}</option>
+            <option value="https://emrex01.csc.fi/ncp">emrex01csc ncp</option>
         </select>
         <input type="submit">
     </form>

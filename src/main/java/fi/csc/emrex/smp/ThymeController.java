@@ -44,6 +44,14 @@ public class ThymeController {
     public String smp() throws Exception {
         return "smp";
     }
+    @RequestMapping(value = "/smp/", method = RequestMethod.GET)
+    public String smpsmp() throws Exception {
+        return "smp";
+    }
+    @RequestMapping(value = "/smp/toNCP", method = RequestMethod.POST)
+    public String smptoNCP(@ModelAttribute NCPChoice choice, Model model, HttpServletResponse response) throws Exception {
+        return toNCP(choice, model, response);
+    }
     @RequestMapping(value = "/toNCP", method = RequestMethod.POST)
     public String toNCP(@ModelAttribute NCPChoice choice, Model model, HttpServletResponse response) throws Exception {
 
@@ -60,6 +68,11 @@ public class ThymeController {
         return "toNCP";
     }
 
+    @RequestMapping(value = "/smp/onReturn", method = RequestMethod.POST)
+    public String smponReturnelmo(@ModelAttribute ElmoData request, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie, @CookieValue(value = "chosenNCP") String chosenNCP) throws Exception {
+        return this.onReturnelmo(request, model, sessionIdCookie, chosenNCP);
+    }
+    
     @RequestMapping(value = "/onReturn", method = RequestMethod.POST)
     public String onReturnelmo(@ModelAttribute ElmoData request, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie, @CookieValue(value = "chosenNCP") String chosenNCP) throws Exception {
         String sessionId = request.getSessionId();
@@ -94,6 +107,10 @@ public class ThymeController {
         context.getSession().setAttribute("elmoxmlstring", decodedXml);
         //model.addAttribute("elmoXml", decodedXml);
         return "onReturn";
+    }
+    @RequestMapping(value = "/smp/review", method = RequestMethod.POST)
+    public String smpRewiew(@ModelAttribute User user, Model model){
+        return this.rewiew(user, model);
     }
     @RequestMapping(value = "/review", method = RequestMethod.POST)
     public String rewiew(@ModelAttribute User user, Model model){

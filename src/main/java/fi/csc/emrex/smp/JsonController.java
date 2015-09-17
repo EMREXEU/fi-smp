@@ -34,7 +34,13 @@ public class JsonController {
     @Autowired
     private HttpServletRequest context;
 
-    @RequestMapping("/smp")
+    @RequestMapping("/smp/api/smp")
+    @ResponseBody
+    public List<NCPResult> shome() throws Exception {
+        return home();
+    }
+    
+    @RequestMapping("/api/smp")
     @ResponseBody
     public List<NCPResult> home() throws Exception {
         System.out.println("SMP here we go again");
@@ -52,6 +58,7 @@ public class JsonController {
         //context.getSession().setAttribute("ncps", results);
         return results;
     }
+    
         
     private JSONObject getNCPs() throws ParseException, URISyntaxException {
         RestTemplate template = new RestTemplate();

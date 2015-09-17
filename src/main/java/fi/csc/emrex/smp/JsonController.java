@@ -28,19 +28,19 @@ import org.springframework.web.client.RestTemplate;
  */
 @Controller
 public class JsonController {
-    
+
     @Value("${emrex.emreg_url}")
     private String emregUrl;
-    
+
     @Autowired
     private HttpServletRequest context;
 
     @RequestMapping("/smp/api/smp")
     @ResponseBody
-    public List<NCPResult> shome() throws Exception {
-        return home();
+    public List<NCPResult> shome(HttpServletRequest request) throws Exception {
+        return this.home(request);
     }
-    
+
     @RequestMapping("/api/smp")
     @ResponseBody
     public List<NCPResult> home(HttpServletRequest request) throws Exception {
@@ -61,16 +61,16 @@ public class JsonController {
         //context.getSession().setAttribute("ncps", results);
         return results;
     }
-    
 
     private void printAttributes(HttpServletRequest request) {
-        
-        System.out.println("udi: " + request.getAttribute("uid").toString());
+        if (request != null) {
+            //System.out.println("udi: " + request.getAttribute("uid").toString());
 
-        final Enumeration<String> attributeNames = request.getAttributeNames();
-        while (attributeNames.hasMoreElements()) {
-            final String name = attributeNames.nextElement();
-            System.out.println(name + ": " + request.getAttribute(name).toString());
+            final Enumeration<String> attributeNames = request.getAttributeNames();
+            while (attributeNames.hasMoreElements()) {
+                final String name = attributeNames.nextElement();
+                System.out.println(name + ": " + request.getAttribute(name).toString());
+            }
         }
     }
 
@@ -80,7 +80,7 @@ public class JsonController {
 
         System.out.println("Result: " + result);
 
-        return (JSONObject)new JSONParser().parse(result);
+        return (JSONObject) new JSONParser().parse(result);
     }
 
 }

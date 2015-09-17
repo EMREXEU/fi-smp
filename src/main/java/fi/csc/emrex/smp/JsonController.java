@@ -7,6 +7,7 @@ package fi.csc.emrex.smp;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,8 +43,10 @@ public class JsonController {
     
     @RequestMapping("/api/smp")
     @ResponseBody
-    public List<NCPResult> home() throws Exception {
+    public List<NCPResult> home(HttpServletRequest request) throws Exception {
         System.out.println("SMP here we go again");
+
+        printAttributes(request);
 
         final JSONObject json = getNCPs();
 
@@ -59,7 +62,18 @@ public class JsonController {
         return results;
     }
     
+
+    private void printAttributes(HttpServletRequest request) {
         
+        System.out.println("udi: " + request.getAttribute("uid").toString());
+
+        final Enumeration<String> attributeNames = request.getAttributeNames();
+        while (attributeNames.hasMoreElements()) {
+            final String name = attributeNames.nextElement();
+            System.out.println(name + ": " + request.getAttribute(name).toString());
+        }
+    }
+
     private JSONObject getNCPs() throws ParseException, URISyntaxException {
         RestTemplate template = new RestTemplate();
         String result = template.getForObject(new URI(emregUrl), String.class);

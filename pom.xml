@@ -6,7 +6,7 @@
 	<groupId>fi.csc.emrex</groupId>
 	<artifactId>smp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>fi-smp</name>
 	<description>SMP</description>
@@ -22,6 +22,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
         <wro4j.version>1.7.6</wro4j.version>
+        <start-class>fi.csc.emrex.smp.FiSmpApplication</start-class>
+        <project.build.finalName>smp</project.build.finalName>
 	</properties>
 
 	<dependencies>
@@ -39,6 +41,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
@@ -153,6 +161,17 @@
                         <version>3.2.0</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <path>/smp</path>
+                    <update>true</update>
+                    <username>admin</username>
+                    <password>admin</password>
+                </configuration>
             </plugin>
 		</plugins>
 

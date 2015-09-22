@@ -35,30 +35,21 @@ public class JsonController {
     @Autowired
     private HttpServletRequest context;
 
-    @RequestMapping("/smp/api/smp")
+    @RequestMapping("/smp/api/smp")//TODO Rename routes
     @ResponseBody
-    public List<NCPResult> shome(HttpServletRequest request) throws Exception {
-        return this.home(request);
+    public List<NCPResult> smpncps() throws Exception {
+        return this.ncps();
     }
 
-    @RequestMapping("/api/smp")
+    @RequestMapping("/api/smp") //TODO Rename routes
     @ResponseBody
-    public List<NCPResult> home(HttpServletRequest request) throws Exception {
+    public List<NCPResult> ncps() throws Exception {
         System.out.println("SMP here we go again");
 
         List<NCPResult> results;
         results = (List<NCPResult>) context.getSession().getAttribute("ncps");
         if (results == null) {
-            final JSONObject json = getNCPs();
-
-            Object NCPS = json.get("ncps");
-            List<Map> ncp_list = (List<Map>) NCPS;
-            results = ncp_list.stream().map(ncp -> new NCPResult(
-                    (String) ncp.get("countryCode"),
-                    (String) ncp.get("acronym"),
-                    (String) ncp.get("url"),
-                    (String) ncp.get("pubKey")
-            )).collect(Collectors.toList());
+            results = FiSmpApplication.getNCPs(emregUrl);
             context.getSession().setAttribute("ncps", results);
         }
         return results;
@@ -74,14 +65,6 @@ public class JsonController {
                 System.out.println(name + ": " + request.getAttribute(name).toString());
             }
         }
-    }
-
-    private JSONObject getNCPs() throws ParseException, URISyntaxException {
-        RestTemplate template = new RestTemplate();
-        String result = template.getForObject(new URI(emregUrl), String.class);
-
-        //System.out.println("Result: " + result);
-        return (JSONObject) new JSONParser().parse(result);
     }
 
 }

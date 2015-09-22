@@ -28,6 +28,11 @@ public class PDFController {
     @Autowired
     private HttpServletRequest context;
 
+    @RequestMapping(value="/smp/elmo", method= RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource smpelmo( HttpServletResponse response, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie) throws Exception{
+        return  this.elmo(response, model, sessionIdCookie);
+    }
     @RequestMapping(value="/elmo", method= RequestMethod.GET)
     @ResponseBody
     public FileSystemResource elmo( HttpServletResponse response, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie) throws Exception{

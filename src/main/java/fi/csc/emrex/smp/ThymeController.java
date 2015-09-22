@@ -5,9 +5,12 @@
  */
 package fi.csc.emrex.smp;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Base64;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,6 +42,9 @@ public class ThymeController {
 
     @Value("${emrex.emreg_url}")
     private String emregUrl;
+    
+        @Value("${return_url}")
+    private String returnUrl;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String smp() throws Exception {
@@ -63,7 +69,20 @@ public class ThymeController {
         model.addAttribute("url", choice.getUrl());
         model.addAttribute("sessionId", context.getSession().getId());
         //TODO Configure this to be dependent on the environem
-        model.addAttribute("returnUrl", "http://localhost:9002/onReturn");
+        Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+        while(networkInterfaces.hasMoreElements()){
+            NetworkInterface nextElement = networkInterfaces.nextElement();
+            System.out.println(nextElement.getDisplayName());
+            Enumeration<InetAddress> inetAddresses = nextElement.getInetAddresses();
+            while(inetAddresses.hasMoreElements()){
+                InetAddress address = inetAddresses.nextElement();
+                System.out.println("  "+ address.getHostName());
+                System.out.println("  "+ address.getCanonicalHostName());
+            }
+        }
+      
+
+        model.addAttribute("returnUrl", returnUrl);
         response.addCookie(new Cookie("chosenNCP", choice.getUrl()));
 
         return "toNCP";
@@ -106,8 +125,9 @@ public class ThymeController {
             return "error";
         }
         context.getSession().setAttribute("elmoxmlstring", decodedXml);
-        //model.addAttribute("elmoXml", decodedXml);
-        return "onReturn";
+        model.addAttribute("elmoXml", decodedXml);
+           
+        return "review";
     }
     @RequestMapping(value = "/smp/review", method = RequestMethod.POST)
     public String smpRewiew(@ModelAttribute User user, Model model){
@@ -128,6 +148,11 @@ public class ThymeController {
 
     private String getPubKeyByReturnUrl(String returnUrl) throws Exception {
         String pubKey = null;
+        System.out.println("pubkey by url: "+returnUrl);
+        if ("https://emrex01.csc.fi/ncp/".equals(returnUrl)){
+            //FIXME AS soon as proper configuration in emreg !!!
+            returnUrl="http://localhost:9001/norex";
+        }
         List<NCPResult> ncps = this.getNCPs();
         for (NCPResult ncp : ncps) {
             if (ncp.getUrl().equals(returnUrl)) {

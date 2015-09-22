@@ -46,19 +46,21 @@ public class JsonController {
     public List<NCPResult> home(HttpServletRequest request) throws Exception {
         System.out.println("SMP here we go again");
 
-        printAttributes(request);
+        List<NCPResult> results;
+        results = (List<NCPResult>) context.getSession().getAttribute("ncps");
+        if (results == null) {
+            final JSONObject json = getNCPs();
 
-        final JSONObject json = getNCPs();
-
-        Object NCPS = json.get("ncps");
-        List<Map> ncp_list = (List<Map>) NCPS;
-        List<NCPResult> results = ncp_list.stream().map(ncp -> new NCPResult(
-                (String) ncp.get("countryCode"),
-                (String) ncp.get("acronym"),
-                (String) ncp.get("url"),
-                (String) ncp.get("pubKey")
-        )).collect(Collectors.toList());
-        //context.getSession().setAttribute("ncps", results);
+            Object NCPS = json.get("ncps");
+            List<Map> ncp_list = (List<Map>) NCPS;
+            results = ncp_list.stream().map(ncp -> new NCPResult(
+                    (String) ncp.get("countryCode"),
+                    (String) ncp.get("acronym"),
+                    (String) ncp.get("url"),
+                    (String) ncp.get("pubKey")
+            )).collect(Collectors.toList());
+            context.getSession().setAttribute("ncps", results);
+        }
         return results;
     }
 
@@ -78,8 +80,7 @@ public class JsonController {
         RestTemplate template = new RestTemplate();
         String result = template.getForObject(new URI(emregUrl), String.class);
 
-        System.out.println("Result: " + result);
-
+        //System.out.println("Result: " + result);
         return (JSONObject) new JSONParser().parse(result);
     }
 

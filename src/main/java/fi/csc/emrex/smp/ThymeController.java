@@ -37,6 +37,7 @@ import org.springframework.web.client.RestTemplate;
 @Controller
 public class ThymeController {
 
+    public static final String SHIB_SHIB_IDENTITY_PROVIDER = "shib-Shib-Identity-Provider";
     @Autowired
     private HttpServletRequest context;
 
@@ -47,34 +48,56 @@ public class ThymeController {
     private String returnUrl;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String smp() throws Exception {
-        return "smp";
+    public String smp(HttpServletRequest request, Model model) throws Exception {
+        return smpsmp(request, model);
     }
 
     @RequestMapping(value = "/smp/", method = RequestMethod.GET)
-    public String smpsmp() throws Exception {
+    public String smpsmp(HttpServletRequest request, Model model) throws Exception {
+        printAttributes(request);
+
         return "smp";
     }
 
+    private void printAttributes(HttpServletRequest request) {
+        final String requestURI = request.getRequestURI();
+        System.out.println("requestURI: " + requestURI);
+
+        final String requestURL = request.getRequestURL().toString();
+        System.out.println("requestURL: " + requestURL);
+
+
+        final Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            final String headerName = headerNames.nextElement();
+            System.out.println(headerName + ": " + request.getHeader(headerName));
+        }
+    }
+
     @RequestMapping(value = "/smp/toNCP", method = RequestMethod.POST)
-    public String smptoNCP(@ModelAttribute NCPChoice choice, Model model, HttpServletResponse response) throws Exception {
-        return toNCP(choice, model, response);
+    public String smptoNCP(@ModelAttribute NCPChoice choice, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return toNCP(choice, model, request, response);
     }
 
     @RequestMapping(value = "/toNCP", method = RequestMethod.POST)
-    public String toNCP(@ModelAttribute NCPChoice choice, Model model, HttpServletResponse response) throws Exception {
+    public String toNCP(@ModelAttribute NCPChoice choice, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         System.out.println("toNCP");
 
         response.addCookie(new Cookie("elmoSessionId", context.getSession().getId()));
-        response.addCookie(new Cookie("chosenNCP",  getPubKeyByReturnUrl(choice.getUrl())));
-        
-        model.addAttribute("url", choice.getUrl());
+        response.addCookie(new Cookie("chosenNCP", getPubKeyByReturnUrl(choice.getUrl())));
+
+        model.addAttribute("url", getUrl(choice, request));
         model.addAttribute("sessionId", context.getSession().getId());
         model.addAttribute("returnUrl", returnUrl);
    
 
         return "toNCP";
+    }
+
+    private String getUrl(NCPChoice choice, HttpServletRequest request) {
+        final String idp = request.getHeader(SHIB_SHIB_IDENTITY_PROVIDER);
+        return idp != null ? choice.getUrl() + "/Shibboleth.sso/Login?entityID=" + request.getHeader(SHIB_SHIB_IDENTITY_PROVIDER) : choice.getUrl();
     }
 
     @RequestMapping(value = "/smp/onReturn", method = RequestMethod.POST)

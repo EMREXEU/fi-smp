@@ -10,7 +10,7 @@
     <form name="myForm" action="/smp/toNCP" method="POST">
         <select name="url">
             <option ng-repeat="x in ncps" value="{{ x.url }}">{{ x.acronym }}</option>
-            <option value="https://emrex01.csc.fi/ncp/">emrex01csc ncp</option>
+            <option value="https://emrex01.csc.fi/ncp">emrex01csc ncp</option>
             <option value="http://localhost:8080/ncp/">localhost ncp</option>
         </select>
         <input type="submit">

@@ -1,29 +1,28 @@
 <div>
-    <table>
-        <tr ng-repeat="x in emreg.ncps">
-            <td>{{ x.countryCode }}</td>
-            <td>{{ x.acronym }}</td>
-            <td>{{ x.url }}</td>
-        </tr>
-        
-    </table>
-    <p>
-      <form name="myForm" action="" method="POST">
-          <select name="url" ng-model="cc">
-            <option ng-repeat="y in emreg.countries" value="{{ y.countryCode }}">{{ y.countryName }}</option> 
-        </select>
-        <input type="submit">
-    </form>
-</p>
-<p>
-    <form name="myForm" action="/smp/toNCP" method="POST">
-        <select name="url">
-            <option ng-repeat="x in emreg.ncps" ng-show="x.countryCode == cc" value="{{ x.url }}">{{ x.acronym }}</option>
-            <option value="https://emrex01.csc.fi/ncp">emrex01csc ncp</option>
-            <option value="http://localhost:8080/ncp/">localhost ncp</option>
-        </select>
-        <input type="submit">
-    </form>
-</p>
-    
+    <div class="right">
+        <p>
+            Choose the country you wish to import your studies from. Then choose the 
+            Contact Point (NCP) that your education provider has directed you use.
+        </p>
+    </div>
+    <div class="left">
+        <p>
+        <form name="myForm" action="" method="POST">
+            <select name="url" ng-model="cc">
+                <option ng-repeat="y in emreg.countries" value="{{ y.countryCode}}">{{ y.countryName}}</option> 
+            </select>
+            <input type="submit">Choose Country</input>
+        </form>
+        </p>
+        <p>
+        <form name="myForm" action="/smp/toNCP" method="POST">
+            <select name="url">
+                <option ng-repeat="x in emreg.ncps" ng-show="x.countryCode == cc" value="{{ x.url}}">{{ x.acronym}}</option>
+                <option value="https://emrex01.csc.fi/ncp">emrex01csc ncp</option>
+                <option value="http://localhost:8080/ncp/">localhost ncp</option>
+            </select>
+            <input type="submit">Contact NCP </input>
+        </form>
+        </p>
+    </div>
 </div>

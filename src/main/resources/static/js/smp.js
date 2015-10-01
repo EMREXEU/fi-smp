@@ -32,10 +32,10 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 });
 
 app.controller('home', function ($scope, $http) {
-    $http.get('/smp/api/smp').success(function (data) {
+    $http.get('/smp/api/emreg').success(function (data) {
         console.log("HOME");
         console.log("data" + JSON.stringify(data));
-        $scope.ncps = data;
+        $scope.emreg = data;
     })
 });
 

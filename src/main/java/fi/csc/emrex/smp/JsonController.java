@@ -46,6 +46,8 @@ public class JsonController {
     public List<NCPResult> ncps() throws Exception {
         System.out.println("SMP here we go again");
 
+        
+        
         List<NCPResult> results;
         results = (List<NCPResult>) context.getSession().getAttribute("ncps");
         if (results == null) {
@@ -54,7 +56,23 @@ public class JsonController {
         }
         return results;
     }
-
+    @RequestMapping("/smp/api/emreg") 
+    @ResponseBody
+    public String smpemreg() throws URISyntaxException{
+        return emreg();
+    }
+    @RequestMapping("/api/emreg") 
+    @ResponseBody
+    public String emreg() throws URISyntaxException{
+        String emreg  = (String) context.getSession().getAttribute("emreg");
+        if (emreg == null){
+            RestTemplate template = new RestTemplate();
+            emreg = template.getForObject(new URI(emregUrl), String.class);
+            context.getSession().setAttribute("emreg", emreg);
+        }
+        return emreg;
+    }
+    
     private void printAttributes(HttpServletRequest request) {
         if (request != null) {
             //System.out.println("udi: " + request.getAttribute("uid").toString());

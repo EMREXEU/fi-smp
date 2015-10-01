@@ -6,12 +6,12 @@
         </p>
     </div>
     <div class="left">
-        <p>
-        <form name="myForm" action="" method="POST">
+        <p>Choose Country:
+        <form name="myForm" action="" method="">
             <select name="url" ng-model="cc">
                 <option ng-repeat="y in emreg.countries" value="{{ y.countryCode}}">{{ y.countryName}}</option> 
             </select>
-            <input type="submit">Choose Country</input>
+            <!--<button name="subject" type="submit"></button>-->
         </form>
         </p>
         <p>
@@ -21,7 +21,7 @@
                 <option value="https://emrex01.csc.fi/ncp">emrex01csc ncp</option>
                 <option value="http://localhost:8080/ncp/">localhost ncp</option>
             </select>
-            <input type="submit">Contact NCP </input>
+            <button type="submit">Choose NCP </button>
         </form>
         </p>
     </div>

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head><title>SMP</title></head>
+    <p th:inline="text" >Contact [[${ncp.acronym}]] at [[${ncp.countryCode}]]</p>
+    
     <body>
         <form action="#" th:action="${url}" method="POST">
             <input class="form-control" type="hidden" th:value="${sessionId}" id="sessionId" name="sessionId" />

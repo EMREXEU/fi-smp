@@ -66,7 +66,6 @@ public class ThymeController {
         final String requestURL = request.getRequestURL().toString();
         System.out.println("requestURL: " + requestURL);
 
-
         final Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             final String headerName = headerNames.nextElement();
@@ -90,7 +89,7 @@ public class ThymeController {
         model.addAttribute("url", getUrl(choice, request));
         model.addAttribute("sessionId", context.getSession().getId());
         model.addAttribute("returnUrl", returnUrl);
-   
+        model.addAttribute("ncp", getNCPByReturnUrl(choice.getUrl()));
 
         return "toNCP";
     }
@@ -156,6 +155,18 @@ public class ThymeController {
         }
 
         return "review";
+    }
+
+    private NCPResult getNCPByReturnUrl(String returnUrl) throws Exception {
+        String pubKey = null;
+        List<NCPResult> ncps = FiSmpApplication.getNCPs(emregUrl);
+        for (NCPResult ncp : ncps) {
+            if (ncp.getUrl().equals(returnUrl)) {
+
+                return ncp;
+            }
+        }
+        return ncps.get(0);
     }
 
     private String getPubKeyByReturnUrl(String returnUrl) throws Exception {

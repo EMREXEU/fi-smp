@@ -98,7 +98,7 @@ public class ThymeController {
 
     private String getUrl(NCPChoice choice, HttpServletRequest request) {
         final String idp = request.getHeader(SHIB_SHIB_IDENTITY_PROVIDER);
-        return idp != null ? choice.getUrl() + "/Shibboleth.sso/Login?entityID=" + request.getHeader(SHIB_SHIB_IDENTITY_PROVIDER) : choice.getUrl();
+        return idp != null ? choice.getUrl() + "Shibboleth.sso/Login?entityID=" + request.getHeader(SHIB_SHIB_IDENTITY_PROVIDER) : choice.getUrl();
     }
 
     @RequestMapping(value = "/smp/onReturn", method = RequestMethod.POST)

@@ -41,10 +41,10 @@ public class ThymeController {
     @Autowired
     private HttpServletRequest context;
 
-    @Value("${emrex.emreg_url}")
+    @Value("${emreg.url}")
     private String emregUrl;
 
-    @Value("${return_url}")
+    @Value("${smp.return.url}")
     private String returnUrl;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)

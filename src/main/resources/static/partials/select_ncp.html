@@ -19,7 +19,7 @@
             <select name="url">
                 <option ng-repeat="x in emreg.ncps" ng-show="x.countryCode == cc" value="{{ x.url}}">{{ x.acronym}}</option>
                 <option value="https://emrex01.csc.fi/ncp">emrex01csc ncp</option>
-                <option value="http://localhost:8080/ncp/">localhost ncp</option>
+                <option value="http://localhost:9001/">localhost ncp</option>
             </select>
             <button type="submit">Choose NCP </button>
         </form>

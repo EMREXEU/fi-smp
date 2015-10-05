@@ -54,8 +54,10 @@ public class ThymeController {
 
     @RequestMapping(value = "/smp/", method = RequestMethod.GET)
     public String smpsmp(HttpServletRequest request, Model model) throws Exception {
+        String firstName=request.getHeader("shib-givenName");
+        String  personId= request.getHeader("shib-uid");
         printAttributes(request);
-
+        model.addAttribute("name",firstName);
         return "smp";
     }
 

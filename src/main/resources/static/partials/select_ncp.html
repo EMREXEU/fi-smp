@@ -1,15 +1,32 @@
-<div>
-    <div class="right">
+<div>logohere</div><h1>Finnish Student System</h1>
+<h2>Hi and welcome to Emrex!</h2>
+<hr/>
+<br>
+<h3>{{learner.fullName}} {{learner.bday.content}}</h3>
+<br>
+
+<div class="pure-g">
+    <div class="pure-u-1-2">
         <p>
-            Choose the country you wish to import your studies from. Then choose the 
-            Contact Point (NCP) that your education provider has directed you use.
+            Importing results from your studies abroad is an quick and easy process in four steps. Each step is briefly described below.
+
+            1. First you select the country where you studied abroad.
+
+            2. Second you use the credentials from one of the universities where you studied to log into the system where your results are stored.
+            -- You will be able to import results from all the universities you studied at.
+
+            3. Third you select the results you want to import as results to your major university.
+
+            4. The fourth and last step is to review your selections and confirm that they are correct.
+
+            Now you are all done and your results from studying abroad can be used to apply for courses at your major university.
         </p>
     </div>
-    <div class="left">
-        <p>Choose Country:
+    <div class="pure-u-1-2">
+        <p>Choose Your Exchange Country:
         <form name="myForm" action="" method="">
             <select name="url" ng-model="cc">
-                <option ng-repeat="y in emreg.countries" value="{{ y.countryCode}}">{{ y.countryName}}</option> 
+                <option ng-repeat="y in emreg.countries" value="{{ y.countryCode}}">{{ y.countryName}}</option>
             </select>
             <!--<button name="subject" type="submit"></button>-->
         </form>

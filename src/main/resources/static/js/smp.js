@@ -11,14 +11,6 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
                 templateUrl: 'partials/to_ncp.html',
                 controller: 'toNCP'
             }).
-            when('/doLogin', {
-                //templateUrl: 'partials/login.html',
-                controller: 'doLogin'
-            }).
-            when('/norex', {
-                templateUrl: 'partials/login.html',
-                controller: 'norex'
-            }).
             when('/elmo', {
                 templateUrl: 'partials/to_ncp.html',
                 controller: 'elmo'
@@ -52,14 +44,6 @@ app.controller('login', function ($scope, $http) {
         $location.path('/elmo/');
         console.log(data);
         $scope.greeting = data;
-    })
-});
-
-app.controller('doLogin', function ($scope, $http, $location, $window) {
-    console.log("doLogin");
-    $http.post('/doLogin/').success(function (data) {
-        $scope.greeting = data;
-        $window.location.href = "#elmo";
     })
 });
 

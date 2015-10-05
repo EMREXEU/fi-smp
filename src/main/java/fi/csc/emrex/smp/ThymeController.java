@@ -91,7 +91,7 @@ public class ThymeController {
         model.addAttribute("url", getUrl(choice, request));
         model.addAttribute("sessionId", context.getSession().getId());
         model.addAttribute("returnUrl", returnUrl);
-        model.addAttribute("ncp", getNCPByReturnUrl(choice.getUrl()));
+        model.addAttribute("ncp", getNCPByReturnUrl(choice.getUrl())); //TODO can be null?
 
         return "toNCP";
     }
@@ -168,16 +168,12 @@ public class ThymeController {
                 return ncp;
             }
         }
-        return ncps.get(0);
+        return null;
     }
 
     private String getPubKeyByReturnUrl(String returnUrl) throws Exception {
         String pubKey = null;
         System.out.println("pubkey by url: " + returnUrl);
-        if ("https://emrex01.csc.fi/ncp/".equals(returnUrl)) {
-            //FIXME AS soon as proper configuration in emreg !!!
-            returnUrl = "http://localhost:9001/norex";
-        }
         List<NCPResult> ncps = FiSmpApplication.getNCPs(emregUrl);
         for (NCPResult ncp : ncps) {
             if (ncp.getUrl().equals(returnUrl)) {

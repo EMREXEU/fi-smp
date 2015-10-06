@@ -8,8 +8,6 @@ public class ElmoResult {
     private String code;
     private String name;
     private String result;
-    private int year;
-    private String term;
     private String credits;
 
     public String getCode() {
@@ -34,22 +32,6 @@ public class ElmoResult {
 
     public void setResult(String result) {
         this.result = result;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public String getTerm() {
-        return term;
-    }
-
-    public void setTerm(String term) {
-        this.term = term;
     }
 
     public String getCredits() {

@@ -5,7 +5,6 @@
  */
 package fi.csc.emrex.smp;
 
-import java.util.Base64;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class PDFController {
-    
+
     @Autowired
     private HttpServletRequest context;
 
@@ -39,11 +37,8 @@ public class PDFController {
 
 
         final String decodedXml = (String) context.getSession().getAttribute("elmoxmlstring");
-        //System.out.println("elmo: " + decodedXml);
-    
 
         new PdfGen().generatePdf(decodedXml, "/tmp/elmo.pdf");
-//        new PdfConverter().writeTextFile(elmo);
 
         response.setHeader("Content-disposition", "attachment;filename=elmo.pdf");
         response.setContentType("application/pdf");

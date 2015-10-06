@@ -141,34 +141,7 @@ public class PdfGen {
 
 
     private void writePdf(ByteArrayOutputStream str, URI uri) throws Exception {
-
         FileUtils.writeByteArrayToFile(new File(uri.getPath()), str.toByteArray());
-
-//        String scheme = uri.getScheme();
-//        if (scheme == null) {
-//            return;
-//        }
-//
-//        switch (scheme.toLowerCase()) {
-//            case "file":
-//                String path = uri.getPath();
-//                if (path == null || path.length() == 0) {
-//                    return;
-//                }
-//                if (path.startsWith("/")) {
-//                    path = path.substring(1);
-//                }
-//                FileOutputStream out = new FileOutputStream(path);
-//                ByteArrayInputStream is = new ByteArrayInputStream(str.toByteArray());
-//                byte[] buf = new byte[1024];
-//                while (is.read(buf) != -1) {
-//                    out.write(buf);
-//                }
-//                out.flush();
-//                out.close();
-//            default:
-//                throw new UnsupportedOperationException("Uknown uri type: " + scheme);
-//        }
     }
 
 

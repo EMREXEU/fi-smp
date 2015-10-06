@@ -7,14 +7,6 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
                 templateUrl: 'partials/select_ncp.html',
                 controller: 'home'
             }).
-            when('/toNCP', {
-                templateUrl: 'partials/to_ncp.html',
-                controller: 'toNCP'
-            }).
-            when('/elmo', {
-                templateUrl: 'partials/to_ncp.html',
-                controller: 'elmo'
-            }).
             otherwise({
                 redirectTo: '/'
             });
@@ -25,34 +17,9 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
 
 app.controller('home', function ($scope, $http) {
     $http.get('/smp/api/emreg').success(function (data) {
-        console.log("HOME");
-        console.log("data" + JSON.stringify(data));
         $scope.emreg = data;
     })
-});
 
-app.controller('toNCP', function ($scope, $http, $location) {
-    console.log("toNCP");
-    $http.post('/smp/toNCP/').success(function (data) {
-
-        $scope.greeting = data;
-    })
-});
-
-app.controller('login', function ($scope, $http) {
-    $http.get('/login/').success(function (data) {
-        $location.path('/elmo/');
-        console.log(data);
-        $scope.greeting = data;
-    })
-});
-
-app.controller('elmo', function ($scope, $http) {
-    console.log("Elmo");
-    $http.post('/elmo/').success(function (data) {
-        console.log(data);
-        $scope.greeting = data;
-    })
 });
 
 

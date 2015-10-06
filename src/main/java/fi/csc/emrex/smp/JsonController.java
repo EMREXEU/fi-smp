@@ -29,7 +29,7 @@ import org.springframework.web.client.RestTemplate;
 @Controller
 public class JsonController {
 
-    @Value("${emrex.emreg_url}")
+    @Value("${emreg.url}")
     private String emregUrl;
 
     @Autowired

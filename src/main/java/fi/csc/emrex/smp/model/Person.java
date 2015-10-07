@@ -78,7 +78,9 @@ public class Person {
     }
 
     public Double verfiy(Person elmoPerson) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO implement verification algorithm;
+        return 0.0;
+        
     }
 
 }

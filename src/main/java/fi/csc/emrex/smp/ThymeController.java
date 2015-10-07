@@ -54,10 +54,9 @@ public class ThymeController {
 
     @RequestMapping(value = "/smp/", method = RequestMethod.GET)
     public String smpsmp(HttpServletRequest request, Model model) throws Exception {
-        String firstName=request.getHeader("shib-givenName");
-        String  personId= request.getHeader("shib-uid");
-        printAttributes(request);
-        model.addAttribute("name",firstName);
+        String firstName = request.getHeader("shib-givenName");
+
+        model.addAttribute("name", firstName);
         return "smp";
     }
 
@@ -102,17 +101,23 @@ public class ThymeController {
     }
 
     @RequestMapping(value = "/smp/onReturn", method = RequestMethod.POST)
-    public String smponReturnelmo(@ModelAttribute ElmoData request, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie, @CookieValue(value = "chosenNCP") String chosenNCP) throws Exception {
-        return this.onReturnelmo(request, model, sessionIdCookie, chosenNCP);
+    public String smponReturnelmo(@ModelAttribute ElmoData request, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie, @CookieValue(value = "chosenNCP") String chosenNCP, HttpServletRequest httpRequest) throws Exception {
+        return this.onReturnelmo(request, model, sessionIdCookie, chosenNCP, httpRequest);
     }
 
     @RequestMapping(value = "/onReturn", method = RequestMethod.POST)
-    public String onReturnelmo(@ModelAttribute ElmoData request, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie, @CookieValue(value = "chosenNCP") String chosenNCP) throws Exception {
+    public String onReturnelmo(@ModelAttribute ElmoData request, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie, @CookieValue(value = "chosenNCP") String chosenNCP, HttpServletRequest httpRequest) throws Exception {
         String sessionId = request.getSessionId();
         String elmo = request.getElmo();
-
+        ShibPerson person = new ShibPerson();
+        person.setFirstName(httpRequest.getHeader("shib-cn"));
+        person.setLastName(httpRequest.getHeader("shib-sn"));
+        person.setGender( httpRequest.getHeader("shib-schacGender"));
+        person.setBirthDate( httpRequest.getHeader("shib-schacDateOfBirth"));
+        
+        context.getSession().setAttribute("shibPerson", person);
         final String decodedXml = new String(Base64.getDecoder().decode(elmo));
-
+  
         //System.out.println("elmo: " + decodedXml);
         System.out.println("providedSessionId: " + sessionId);
 
@@ -152,6 +157,8 @@ public class ThymeController {
         String elmoString = (String) context.getSession().getAttribute("elmoxmlstring");
         model.addAttribute("elmoXml", elmoString);
         String name = getUserFromElmo(elmoString);
+        ShibPerson shibPerson = (ShibPerson)context.getSession().getAttribute("shibPerson");
+        
         if (!user.getName().equals(name)) {
             model.addAttribute("error", "<p>Username deosn't not match elmo</p>");
         }

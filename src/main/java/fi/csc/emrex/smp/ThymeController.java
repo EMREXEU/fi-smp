@@ -5,21 +5,20 @@
  */
 package fi.csc.emrex.smp;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.URI;
-import java.net.URISyntaxException;
+import fi.csc.emrex.smp.model.Person;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.Base64;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -28,7 +27,11 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -109,15 +112,15 @@ public class ThymeController {
     public String onReturnelmo(@ModelAttribute ElmoData request, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie, @CookieValue(value = "chosenNCP") String chosenNCP, HttpServletRequest httpRequest) throws Exception {
         String sessionId = request.getSessionId();
         String elmo = request.getElmo();
-        ShibPerson person = new ShibPerson();
+        Person person = new Person("YYYYMMDD");
         person.setFirstName(httpRequest.getHeader("shib-cn"));
         person.setLastName(httpRequest.getHeader("shib-sn"));
-        person.setGender( httpRequest.getHeader("shib-schacGender"));
-        person.setBirthDate( httpRequest.getHeader("shib-schacDateOfBirth"));
-        
+        person.setGender(httpRequest.getHeader("shib-schacGender"));
+        person.setBirthDate(httpRequest.getHeader("shib-schacDateOfBirth"));
+
         context.getSession().setAttribute("shibPerson", person);
         final String decodedXml = new String(Base64.getDecoder().decode(elmo));
-  
+
         //System.out.println("elmo: " + decodedXml);
         System.out.println("providedSessionId: " + sessionId);
 
@@ -156,13 +159,10 @@ public class ThymeController {
 
         String elmoString = (String) context.getSession().getAttribute("elmoxmlstring");
         model.addAttribute("elmoXml", elmoString);
-        String name = getUserFromElmo(elmoString);
-        ShibPerson shibPerson = (ShibPerson)context.getSession().getAttribute("shibPerson");
+        Person elmoPerson  = getUserFromElmo(elmoString);
+        Person shibPerson = (Person) context.getSession().getAttribute("shibPerson");
+        Double verificationScore = shibPerson.verfiy(elmoPerson);
         
-        if (!user.getName().equals(name)) {
-            model.addAttribute("error", "<p>Username deosn't not match elmo</p>");
-        }
-
         return "review";
     }
 
@@ -191,9 +191,48 @@ public class ThymeController {
         return pubKey;
     }
 
-    private String getUserFromElmo(String elmoString) {
-        return "";
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private Person getUserFromElmo(String elmoString) {
+        Document document;
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        //Get the DOM Builder
+        DocumentBuilder builder;
+        try {
+            builder = factory.newDocumentBuilder();
+            StringReader sr = new StringReader(elmoString);
+            InputSource s = new InputSource(sr);
+
+            //Load and Parse the XML document
+            //document contains the complete XML as a Tree.
+            document = builder.parse(s);
+            NodeList learners = document.getElementsByTagName("learner");
+            Element learner = getOneNode(document.getDocumentElement(), "learner");
+            if (learner != null) {
+                Element bday = getOneNode(learner, "bday");
+                Person elmoPerson = new Person(bday.getAttribute("dtf"));
+                elmoPerson.setBirthDate(bday.getTextContent());
+                elmoPerson.setFirstName(getOneNode(learner, "givenNames").getTextContent());
+                elmoPerson.setLastName(getOneNode(learner, "familyName").getTextContent());
+                elmoPerson.setGender(getOneNode(learner, "gender").getTextContent());
+                return elmoPerson;
+
+            } else {
+                return null;
+            }
+
+        } catch (ParserConfigurationException| IOException | SAXException ex) {
+            Logger.getLogger(ThymeController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        
+
     }
 
+    private Element getOneNode(Element node, String name) {
+        NodeList list = node.getElementsByTagName(name);
+        if (list.getLength() == 1) {
+            return (Element) list.item(0);
+        } else {
+            return null;
+        }
+    }
 }

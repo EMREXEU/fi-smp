@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fi.csc.emrex.smp;
+package fi.csc.emrex.smp.model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,8 +12,7 @@ import java.time.format.DateTimeFormatter;
  *
  * @author salum
  */
-public class ShibPerson {
-    private static final String SCHACHFORMAT = "YYYYMMDD";
+public class Person {
     private String firstName;
     private String lastName;
     /**
@@ -27,8 +26,9 @@ public class ShibPerson {
     private LocalDate birthDate;
     private final DateTimeFormatter dateFormatter;
 
-    public ShibPerson() {
-        dateFormatter = DateTimeFormatter.ofPattern(SCHACHFORMAT);
+
+    public Person(String dateFormat) {
+        dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
     }
 
     public String getFirstName() {
@@ -77,4 +77,9 @@ public class ShibPerson {
         this.birthDate = LocalDate.parse(birthDate, dateFormatter);
     }
 
+    public Double verfiy(Person elmoPerson) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
+

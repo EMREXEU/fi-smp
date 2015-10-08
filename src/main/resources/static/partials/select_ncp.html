@@ -1,6 +1,8 @@
-
 <div class="pure-g">
-    <div class="pure-u-1-1"> <img class="custom-inline" src="flags/eu.png" style="float:left;" height="60"><img style="float:left;" class="custom-inline" height="60" src="flags/emrex.png"><h1  class="custom-inline" style="margin-left:40px;">Supporting Student Mobility (EMREX)</h1></div>
+    <div class="pure-u-1-1"><img class="custom-inline" src="flags/eu.png" style="float:left;" height="60"><img
+            style="float:left;" class="custom-inline" height="60" src="flags/emrex.png">
+
+        <h1 class="custom-inline" style="margin-left:40px;">Supporting Student Mobility (EMREX)</h1></div>
 
     <div class="pure-u-1-2">
         <div class="custom-option-margin ">
@@ -33,6 +35,7 @@
             <p>
                 5. Afterwards you will be asked to answer a few questions about the tool to help us develop it further.
             </p>
+
             <h3>So let's get started by selecting a country!</h3>
 
 
@@ -44,23 +47,20 @@
             <table class="pure-table custom-no-borders">
                 <tbody></tbody>
                 <tr class="custom-no-borders" ng-repeat="country in emreg.countries">
-
-                    <td class="custom-no-borders" style="padding-left:0px;"><input type="button" value="Select"
+                    <td class="custom-no-borders" style="padding-left:0px;"><input class="custom-go-button" type="button" value="Select"
                                                                                    ng-click="selectCountry(country)">
                     </td>
                     <td class="custom-no-borders"><img ng-src="{{getFlag(country.countryName)}}" height="40"/></td>
-
                     <td class="custom-no-borders">{{country.countryName}}</td>
-
                 </tr>
                 </tbody>
-
             </table>
 
-
-            <form name="selectUrlForm" action="/smp/toNCP" method="POST">
-                <input name="url" ng-value="ncpUrl">
-                <button id="form-button" type="submit">Choose NCP</button>
+            <form ng-attr-action="{{ncpUrl}}" method="POST">
+                <input class="form-control" type="hidden" ng-value="sessionData.sessionId" name="sessionId"/>
+                <input class="form-control" type="hidden" ng-value="sessionData.returnUrl" id="returnUrl"
+                       name="returnUrl"/>
+                <input id="postSessionData" style="display: none;" type="submit" ng-disabled="!sessionData.sessionId || !sessionData.returnUrl"/>
             </form>
         </div>
     </div>

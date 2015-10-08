@@ -18,9 +18,14 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+
+
+
 
 /**
  *
@@ -32,22 +37,39 @@ public class JsonController {
     @Value("${emreg.url}")
     private String emregUrl;
 
+    @Value("${smp.return.url}")
+    private String returnUrl;
+
     @Autowired
     private HttpServletRequest context;
 
-    @RequestMapping("/smp/api/smp")//TODO Rename routes
+    @RequestMapping("/smp/api/smp")
     @ResponseBody
     public List<NCPResult> smpncps() throws Exception {
         return this.ncps();
     }
 
-    @RequestMapping("/api/smp") //TODO Rename routes
+    @RequestMapping(value = "/smp/api/sessiondata", method = RequestMethod.POST)
+    @ResponseBody
+    public SessionData smpSessionData(@RequestBody NCPChoice choice, HttpServletRequest request) throws Exception {
+        return this.sessionData(choice,request);
+    }
+
+    @RequestMapping(value = "/api/sessiondata", method = RequestMethod.POST)
+    @ResponseBody
+    public SessionData sessionData(@RequestBody NCPChoice choice, HttpServletRequest request) throws Exception {
+        SessionData result = new SessionData();
+        result.setElmoSessionId(context.getSession().getId());
+        result.setNcpPublicKey(FiSmpApplication.getPubKeyByReturnUrl(choice.getUrl(), emregUrl));
+        result.setUrl(FiSmpApplication.getUrl(choice, request));
+        result.setSessionId(context.getSession().getId());
+        result.setReturnUrl(returnUrl);
+        return result;
+    }
+
+    @RequestMapping("/api/smp")
     @ResponseBody
     public List<NCPResult> ncps() throws Exception {
-        System.out.println("SMP here we go again");
-
-        
-        
         List<NCPResult> results;
         results = (List<NCPResult>) context.getSession().getAttribute("ncps");
         if (results == null) {
@@ -56,12 +78,12 @@ public class JsonController {
         }
         return results;
     }
-    @RequestMapping("/smp/api/emreg") 
+    @RequestMapping("/smp/api/emreg")
     @ResponseBody
     public String smpemreg() throws URISyntaxException{
         return emreg();
     }
-    @RequestMapping("/api/emreg") 
+    @RequestMapping("/api/emreg")
     @ResponseBody
     public String emreg() throws URISyntaxException{
         String emreg  = (String) context.getSession().getAttribute("emreg");
@@ -72,10 +94,9 @@ public class JsonController {
         }
         return emreg;
     }
-    
+
     private void printAttributes(HttpServletRequest request) {
         if (request != null) {
-            //System.out.println("udi: " + request.getAttribute("uid").toString());
 
             final Enumeration<String> attributeNames = request.getAttributeNames();
             while (attributeNames.hasMoreElements()) {

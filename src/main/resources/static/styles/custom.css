@@ -11,6 +11,18 @@
 .custom-option-margin{
     margin: 5px;
 }
+.custom-go-button{
+    color: white;
+    border: 2px solid lightgrey;
+    background-color: #629c44;
+    padding:10px;
+    border-radius: 5px;
+    font-size:15px;
+
+}
+.custom-panic-button{
+    background-color: red;
+}
 
 .custom-zero-margin{
     margin:0px;

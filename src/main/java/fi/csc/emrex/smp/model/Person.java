@@ -69,8 +69,11 @@ public class Person {
     }
 
     public void setBirthDate(String birthDate) {
-
-        this.birthDate = LocalDate.parse(birthDate, dateFormatter);
+        if (birthDate == null) {
+            this.birthDate = null;
+        } else {
+            this.birthDate = LocalDate.parse(birthDate, dateFormatter);
+        }
     }
 
     public VerificationReply verfiy(Person otherPerson) {

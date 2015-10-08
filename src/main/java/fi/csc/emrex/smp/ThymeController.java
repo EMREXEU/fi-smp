@@ -41,7 +41,6 @@ import org.xml.sax.SAXException;
 @Controller
 public class ThymeController {
 
-
     @Autowired
     private HttpServletRequest context;
 
@@ -158,8 +157,6 @@ public class ThymeController {
         return "review";
     }
 
-
-
     private Person getUserFromElmo(String elmoString) {
         Document document;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -186,7 +183,7 @@ public class ThymeController {
                 return elmoPerson;
 
             } else {
-                   System.out.println("no learner found");
+                System.out.println("no learner found");
                 return null;
             }
 

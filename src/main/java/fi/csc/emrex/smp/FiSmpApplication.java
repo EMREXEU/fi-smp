@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 @SpringBootApplication
 
 @EnableAutoConfiguration(exclude = {
-        org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class
+    org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class
 })
 public class FiSmpApplication {
 
@@ -34,8 +34,8 @@ public class FiSmpApplication {
         }
     }
 
-    public static boolean verifyElmoSignature(String elmo, String ncpKey){
-        return ! (ncpKey == null);
+    public static boolean verifyElmoSignature(String elmo, String ncpKey) {
+        return !(ncpKey == null);
     }
 
     public static void main(String[] args) {
@@ -43,7 +43,7 @@ public class FiSmpApplication {
     }
 
     public static List<NCPResult> getNCPs(String url) throws ParseException, URISyntaxException {
-         RestTemplate template = new RestTemplate();
+        RestTemplate template = new RestTemplate();
         String result = template.getForObject(new URI(url), String.class);
 
         //System.out.println("Result: " + result);

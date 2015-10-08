@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
 @Controller
 public class ThymeController {
 
-    public static final String SHIB_SHIB_IDENTITY_PROVIDER = "shib-Shib-Identity-Provider";
+
     @Autowired
     private HttpServletRequest context;
 
@@ -76,32 +76,6 @@ public class ThymeController {
             final String headerName = headerNames.nextElement();
             System.out.println(headerName + ": " + request.getHeader(headerName));
         }
-    }
-
-    @RequestMapping(value = "/smp/toNCP", method = RequestMethod.POST)
-    public String smptoNCP(@ModelAttribute NCPChoice choice, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return toNCP(choice, model, request, response);
-    }
-
-    @RequestMapping(value = "/toNCP", method = RequestMethod.POST)
-    public String toNCP(@ModelAttribute NCPChoice choice, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        System.out.println("toNCP");
-
-        response.addCookie(new Cookie("elmoSessionId", context.getSession().getId()));
-        response.addCookie(new Cookie("chosenNCP", getPubKeyByReturnUrl(choice.getUrl())));
-
-        model.addAttribute("url", getUrl(choice, request));
-        model.addAttribute("sessionId", context.getSession().getId());
-        model.addAttribute("returnUrl", returnUrl);
-        model.addAttribute("ncp", getNCPByReturnUrl(choice.getUrl())); //TODO can be null?
-
-        return "toNCP";
-    }
-
-    private String getUrl(NCPChoice choice, HttpServletRequest request) {
-        final String idp = request.getHeader(SHIB_SHIB_IDENTITY_PROVIDER);
-        return idp != null ? choice.getUrl() + "Shibboleth.sso/Login?entityID=" + request.getHeader(SHIB_SHIB_IDENTITY_PROVIDER) : choice.getUrl();
     }
 
     @RequestMapping(value = "/smp/onReturn", method = RequestMethod.POST)
@@ -184,30 +158,7 @@ public class ThymeController {
         return "review";
     }
 
-    private NCPResult getNCPByReturnUrl(String returnUrl) throws Exception {
-        String pubKey = null;
-        List<NCPResult> ncps = FiSmpApplication.getNCPs(emregUrl);
-        for (NCPResult ncp : ncps) {
-            if (ncp.getUrl().equals(returnUrl)) {
 
-                return ncp;
-            }
-        }
-        return null;
-    }
-
-    private String getPubKeyByReturnUrl(String returnUrl) throws Exception {
-        String pubKey = null;
-        System.out.println("pubkey by url: " + returnUrl);
-        List<NCPResult> ncps = FiSmpApplication.getNCPs(emregUrl);
-        for (NCPResult ncp : ncps) {
-            if (ncp.getUrl().equals(returnUrl)) {
-                System.out.println("Url mathces: " + returnUrl);
-                return ncp.getCertificate();
-            }
-        }
-        return pubKey;
-    }
 
     private Person getUserFromElmo(String elmoString) {
         Document document;

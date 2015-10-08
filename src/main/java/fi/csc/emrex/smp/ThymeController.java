@@ -6,6 +6,7 @@
 package fi.csc.emrex.smp;
 
 import fi.csc.emrex.smp.model.Person;
+import fi.csc.emrex.smp.model.VerificationReply;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Base64;
@@ -161,8 +162,8 @@ public class ThymeController {
         model.addAttribute("elmoXml", elmoString);
         Person elmoPerson  = getUserFromElmo(elmoString);
         Person shibPerson = (Person) context.getSession().getAttribute("shibPerson");
-        Double verificationScore = shibPerson.verfiy(elmoPerson);
-        
+        VerificationReply verification = shibPerson.verfiy(elmoPerson);
+        model.addAttribute("verification", verification );
         return "review";
     }
 
@@ -204,7 +205,7 @@ public class ThymeController {
             //Load and Parse the XML document
             //document contains the complete XML as a Tree.
             document = builder.parse(s);
-            NodeList learners = document.getElementsByTagName("learner");
+
             Element learner = getOneNode(document.getDocumentElement(), "learner");
             if (learner != null) {
                 Element bday = getOneNode(learner, "bday");
@@ -235,4 +236,6 @@ public class ThymeController {
             return null;
         }
     }
+    
+    
 }

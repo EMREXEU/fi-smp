@@ -13,11 +13,8 @@ and open the template in the editor.
     <body>
         <div>
             <p th:text="${error}" />
-            <p th:inline="text"> Verification score: [[${verification.score}]]<p>
-            <ul>
-                <li th:each="message : ${verification.messages}" th:text="${message}">
-                </li>
-            </ul>
+            <p th:inline="text"> Verification score: [[${verification}]]</p>
+
 
             <p th:text="${elmoXml}" />
             <p><a href="/smp/elmo">Download PDF</a></p>

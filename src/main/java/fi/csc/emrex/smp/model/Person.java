@@ -76,7 +76,7 @@ public class Person {
         }
     }
 
-    public VerificationReply verfiy(Person otherPerson) {
+    public VerificationReply verifiy(Person otherPerson) {
         //TODO implement verification algorithm;
         VerificationReply r = new VerificationReply();
         int match = 0;

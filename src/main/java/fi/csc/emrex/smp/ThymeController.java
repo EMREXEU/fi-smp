@@ -146,24 +146,41 @@ public class ThymeController {
         }
         context.getSession().setAttribute("elmoxmlstring", decodedXml);
         model.addAttribute("elmoXml", decodedXml);
-
-        return "review";
+        Person elmoPerson = getUserFromElmo(decodedXml);
+        //Person shibPerson = (Person) context.getSession().getAttribute("shibPerson");
+        if (person != null) {
+            if (elmoPerson != null) {
+                VerificationReply verification = person.verifiy(elmoPerson);
+                System.out.println("VerScore: " + verification.getScore());
+                model.addAttribute("verification", verification);
+                return "review";
+            } else {
+                model.addAttribute("error", "<p>Elmo learner missing</p>");
+                return "review"; //todo fix this
+            }
+        } else {
+            model.addAttribute("error", "<p>HAKA login missing</p>");
+            return "error";
+        }
     }
 
+    @Deprecated
     @RequestMapping(value = "/smp/review", method = RequestMethod.POST)
     public String smpRewiew(@ModelAttribute User user, Model model) {
         return this.rewiew(user, model);
     }
 
+    @Deprecated
     @RequestMapping(value = "/review", method = RequestMethod.POST)
     public String rewiew(@ModelAttribute User user, Model model) {
 
         String elmoString = (String) context.getSession().getAttribute("elmoxmlstring");
         model.addAttribute("elmoXml", elmoString);
-        Person elmoPerson  = getUserFromElmo(elmoString);
+        Person elmoPerson = getUserFromElmo(elmoString);
         Person shibPerson = (Person) context.getSession().getAttribute("shibPerson");
-        VerificationReply verification = shibPerson.verfiy(elmoPerson);
-        model.addAttribute("verification", verification );
+        VerificationReply verification = shibPerson.verifiy(elmoPerson);
+        System.out.println("VerScore: " + verification.getScore());
+        model.addAttribute("verification", verification);
         return "review";
     }
 
@@ -208,6 +225,7 @@ public class ThymeController {
 
             Element learner = getOneNode(document.getDocumentElement(), "learner");
             if (learner != null) {
+                System.out.println("learner found");
                 Element bday = getOneNode(learner, "bday");
                 Person elmoPerson = new Person(bday.getAttribute("dtf"));
                 elmoPerson.setBirthDate(bday.getTextContent());
@@ -217,14 +235,15 @@ public class ThymeController {
                 return elmoPerson;
 
             } else {
+                   System.out.println("no learner found");
                 return null;
             }
 
-        } catch (ParserConfigurationException| IOException | SAXException ex) {
+        } catch (ParserConfigurationException | IOException | SAXException ex) {
+            System.out.println(ex.getMessage());
             Logger.getLogger(ThymeController.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-        
 
     }
 
@@ -236,6 +255,5 @@ public class ThymeController {
             return null;
         }
     }
-    
-    
+
 }

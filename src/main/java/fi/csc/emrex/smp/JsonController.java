@@ -5,6 +5,7 @@
  */
 package fi.csc.emrex.smp;
 
+import fi.csc.emrex.smp.model.VerifiedReport;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Enumeration;
@@ -93,6 +94,16 @@ public class JsonController {
             context.getSession().setAttribute("emreg", emreg);
         }
         return emreg;
+    }
+    @RequestMapping("/smp/api/reports")
+    @ResponseBody
+    public List<VerifiedReport>  smpreports(){
+        return reports();
+    }
+    @RequestMapping("/api/reports")
+    @ResponseBody
+    public List<VerifiedReport>  reports() {
+        return (List<VerifiedReport> ) this.context.getSession().getAttribute("reports");
     }
 
     private void printAttributes(HttpServletRequest request) {

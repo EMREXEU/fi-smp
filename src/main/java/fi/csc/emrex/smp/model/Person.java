@@ -21,10 +21,10 @@ public class Person {
      */
     private int gender;
     private LocalDate birthDate;
-    private final DateTimeFormatter dateFormatter;
+    private DateTimeFormatter dateFormatter;
 
-    public Person(String dateFormat) {
-        dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
+    public Person() {
+        
     }
 
     public String getFirstName() {
@@ -68,7 +68,8 @@ public class Person {
         this.birthDate = birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(String birthDate , String dateFormat) {
+        dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
         if (birthDate == null) {
             this.birthDate = null;
         } else {

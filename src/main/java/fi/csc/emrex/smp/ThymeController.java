@@ -7,8 +7,11 @@ package fi.csc.emrex.smp;
 
 import fi.csc.emrex.smp.model.Person;
 import fi.csc.emrex.smp.model.VerificationReply;
+import fi.csc.emrex.smp.model.VerifiedReport;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Enumeration;
 import java.util.List;
@@ -20,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -30,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -86,11 +92,11 @@ public class ThymeController {
     public String onReturnelmo(@ModelAttribute ElmoData request, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie, @CookieValue(value = "chosenNCP") String chosenNCP, HttpServletRequest httpRequest) throws Exception {
         String sessionId = request.getSessionId();
         String elmo = request.getElmo();
-        Person person = new Person("YYYYMMDD");
+        Person person = new Person();
         person.setFirstName(httpRequest.getHeader("shib-cn"));
         person.setLastName(httpRequest.getHeader("shib-sn"));
         person.setGender(httpRequest.getHeader("shib-schacGender"));
-        person.setBirthDate(httpRequest.getHeader("shib-schacDateOfBirth"));
+        person.setBirthDate(httpRequest.getHeader("shib-schacDateOfBirth"), "YYYYMMDD");
 
         context.getSession().setAttribute("shibPerson", person);
         final String decodedXml = new String(Base64.getDecoder().decode(elmo));
@@ -119,87 +125,153 @@ public class ThymeController {
         }
         context.getSession().setAttribute("elmoxmlstring", decodedXml);
         model.addAttribute("elmoXml", decodedXml);
-        Person elmoPerson = getUserFromElmo(decodedXml);
-        //Person shibPerson = (Person) context.getSession().getAttribute("shibPerson");
-        if (person != null) {
-            if (elmoPerson != null) {
-                VerificationReply verification = person.verifiy(elmoPerson);
-                System.out.println("VerScore: " + verification.getScore());
-                model.addAttribute("verification", verification);
-                return "review";
-            } else {
-                model.addAttribute("error", "<p>Elmo learner missing</p>");
-                return "review"; //todo fix this
-            }
-        } else {
-            model.addAttribute("error", "<p>HAKA login missing</p>");
-            return "error";
-        }
-    }
-
-    @Deprecated
-    @RequestMapping(value = "/smp/review", method = RequestMethod.POST)
-    public String smpRewiew(@ModelAttribute User user, Model model) {
-        return this.rewiew(user, model);
-    }
-
-    @Deprecated
-    @RequestMapping(value = "/review", method = RequestMethod.POST)
-    public String rewiew(@ModelAttribute User user, Model model) {
-
-        String elmoString = (String) context.getSession().getAttribute("elmoxmlstring");
-        model.addAttribute("elmoXml", elmoString);
-        Person elmoPerson = getUserFromElmo(elmoString);
-        Person shibPerson = (Person) context.getSession().getAttribute("shibPerson");
-        VerificationReply verification = shibPerson.verifiy(elmoPerson);
-        System.out.println("VerScore: " + verification.getScore());
-        model.addAttribute("verification", verification);
-        return "review";
-    }
-
-    private Person getUserFromElmo(String elmoString) {
+        System.out.println(decodedXml);
         Document document;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         //Get the DOM Builder
         DocumentBuilder builder;
-        try {
-            builder = factory.newDocumentBuilder();
-            StringReader sr = new StringReader(elmoString);
-            InputSource s = new InputSource(sr);
+        if (person != null) {
+            List<VerifiedReport> results = new ArrayList<>();
+            try {
+                VerifiedReport vr = new VerifiedReport();
+                builder = factory.newDocumentBuilder();
+                StringReader sr = new StringReader(decodedXml);
+                InputSource s = new InputSource(sr);
 
-            //Load and Parse the XML document
-            //document contains the complete XML as a Tree.
-            document = builder.parse(s);
+                //Load and Parse the XML document
+                //document contains the complete XML as a Tree.
+                document = builder.parse(s);
+                NodeList reports = document.getElementsByTagName("report");
+                for (int i = 0; i < reports.getLength(); i++) {
 
-            Element learner = getOneNode(document.getDocumentElement(), "learner");
-            if (learner != null) {
-                System.out.println("learner found");
-                Element bday = getOneNode(learner, "bday");
-                Person elmoPerson = new Person(bday.getAttribute("dtf"));
-                elmoPerson.setBirthDate(bday.getTextContent());
-                elmoPerson.setFirstName(getOneNode(learner, "givenNames").getTextContent());
-                elmoPerson.setLastName(getOneNode(learner, "familyName").getTextContent());
-                elmoPerson.setGender(getOneNode(learner, "gender").getTextContent());
-                return elmoPerson;
+                    Element report = (Element) reports.item(i);
+                    vr.setReport(report.getTextContent());
+                    Person elmoPerson = getUserFromElmoReport(report);
+                    //Person shibPerson = (Person) context.getSession().getAttribute("shibPerson");
 
-            } else {
-                System.out.println("no learner found");
-                return null;
+                    if (elmoPerson != null) {
+                        VerificationReply verification = person.verifiy(elmoPerson);
+                        System.out.println("VerScore: " + verification.getScore());
+
+                        vr.setVerification(verification);
+
+
+                    } else {
+                        vr.addMessage("Elmo learner missing");
+                        //todo fix this
+                    }
+                    results.add(vr);
+                }
+                context.getSession().setAttribute("reports", results);
+                model.addAttribute("reports", results);
+
+            } catch (ParserConfigurationException | IOException | SAXException ex) {
+                System.out.println(ex.getMessage());
+                Logger.getLogger(ThymeController.class.getName()).log(Level.SEVERE, null, ex);
+                model.addAttribute("error", ex.getMessage());
+                return "error";
             }
+        } else {
 
-        } catch (ParserConfigurationException | IOException | SAXException ex) {
-            System.out.println(ex.getMessage());
-            Logger.getLogger(ThymeController.class.getName()).log(Level.SEVERE, null, ex);
+            model.addAttribute("error", "<p>HAKA login missing</p>");
+            return "error";
+        }
+        return "review";
+    }
+
+    /**
+     * @Deprecated @RequestMapping(value = "/smp/review", method =
+     * RequestMethod.POST) public String smpRewiew(@ModelAttribute User user,
+     * Model model) { return this.rewiew(user, model); }
+     *
+     * @Deprecated
+     * @RequestMapping(value = "/review", method = RequestMethod.POST) public
+     * String rewiew(@ModelAttribute User user, Model model) {
+     *
+     * String elmoString = (String)
+     * context.getSession().getAttribute("elmoxmlstring");
+     * model.addAttribute("elmoXml", elmoString);
+     * System.out.println(elmoString); Person elmoPerson =
+     * getUserFromElmo(elmoString); Person shibPerson = (Person)
+     * context.getSession().getAttribute("shibPerson"); VerificationReply
+     * verification = shibPerson.verifiy(elmoPerson);
+     * System.out.println("VerScore: " + verification.getScore());
+     * model.addAttribute("verification", verification); return "review"; }
+     */
+    private Person getUserFromElmoReport(Element report) {
+
+        Element learner = getOneNode(report, "learner");
+        if (learner != null) {
+            System.out.println("learner found");
+            Person elmoPerson = new Person();
+            elmoPerson.setFirstName(getOneNode(learner, "givenNames").getTextContent());
+            elmoPerson.setLastName(getOneNode(learner, "familyName").getTextContent());
+            Element bday = getOneNode(learner, "bday");
+            if (bday != null) {
+                elmoPerson.setBirthDate(bday.getTextContent(), bday.getAttribute("dtf"));
+            }
+            Element gender = getOneNode(learner, "gender");
+            if (gender != null) {
+
+                elmoPerson.setGender(gender.getTextContent());
+            }
+            return elmoPerson;
+
+        } else {
+            System.out.println("no learner found");
             return null;
         }
 
     }
 
+
+    /*
+     private Person getPersonFromElmo(String xml) {
+     xml = xml.replaceAll("[\\n\\r]", "");
+     DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+     docFactory.setNamespaceAware(false);
+     DocumentBuilder docBuilder = null;
+     Document doc = null;
+     try {
+     docBuilder = docFactory.newDocumentBuilder();
+     doc = docBuilder.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
+     } catch (Exception e) {
+     System.out.println("Failed to parse XML"+ e.getMessage());
+     throw new IllegalArgumentException("Failed to parse XML", e);
+     }
+
+     NodeList list = doc.getElementsByTagName("report");
+     if (list.getLength() == 0) {
+     throw new IllegalArgumentException("Failed to get report from XML.");
+     }
+     Node report = list.item(0);
+
+     Person p = new Person();
+     p.setBirthDate(getValueForTag(report, "learner/bday"));
+     p.setFamilyName(getValueForTag(report, "learner/familyName"));
+     p.setGivenNames(getValueForTag(report, "learner/givenNames"));
+     p.setGender("-"); // TODO: We need to expand ELMO to include Gender
+
+     return p;
+     }
+     */
     private Element getOneNode(Element node, String name) {
         NodeList list = node.getElementsByTagName(name);
         if (list.getLength() == 1) {
+            System.out.println("found " + name);
             return (Element) list.item(0);
         } else {
+            System.out.println("no " + name + "found");
+            return null;
+        }
+    }
+
+    private String getValueForTag(Node node, String exp) {
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        try {
+            return xpath.evaluate(exp, node);
+        } catch (Exception e) {
+            System.out.println("XPATH error" + e);
             return null;
         }
     }

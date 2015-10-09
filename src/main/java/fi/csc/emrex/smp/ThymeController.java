@@ -11,6 +11,7 @@ import fi.csc.emrex.smp.model.VerifiedReport;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Enumeration;
@@ -23,6 +24,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,7 +132,7 @@ public class ThymeController {
         }
         context.getSession().setAttribute("elmoxmlstring", decodedXml);
         model.addAttribute("elmoXml", decodedXml);
-        System.out.println(decodedXml);
+        //System.out.println(decodedXml);
         Document document;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         //Get the DOM Builder
@@ -145,7 +152,7 @@ public class ThymeController {
                 for (int i = 0; i < reports.getLength(); i++) {
 
                     Element report = (Element) reports.item(i);
-                    vr.setReport(report.getTextContent());
+                    vr.setReport(nodeToString(report));
                     Person elmoPerson = getUserFromElmoReport(report);
                     //Person shibPerson = (Person) context.getSession().getAttribute("shibPerson");
 
@@ -154,7 +161,6 @@ public class ThymeController {
                         System.out.println("VerScore: " + verification.getScore());
 
                         vr.setVerification(verification);
-
 
                     } else {
                         vr.addMessage("Elmo learner missing");
@@ -276,4 +282,16 @@ public class ThymeController {
         }
     }
 
+    private String nodeToString(Node node) {
+        StringWriter sw = new StringWriter();
+        try {
+            Transformer t = TransformerFactory.newInstance().newTransformer();
+            t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            t.setOutputProperty(OutputKeys.INDENT, "no");
+            t.transform(new DOMSource(node), new StreamResult(sw));
+        } catch (TransformerException te) {
+            System.out.println("nodeToString Transformer Exception");
+        }
+        return sw.toString();
+    }
 }

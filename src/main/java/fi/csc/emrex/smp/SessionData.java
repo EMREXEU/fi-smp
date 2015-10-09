@@ -1,7 +1,5 @@
 package fi.csc.emrex.smp;
 
-import javax.websocket.Session;
-
 /**
  * Created by jpentika on 08/10/15.
  */

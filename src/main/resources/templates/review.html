@@ -1,23 +1,20 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
-        <div>
-            <p th:text="${error}" />
-            <p th:inline="text"> Verification score: [[${verification}]]</p>
+<!doctype html>
+<html>
+<head>
+    <title th:inline="text" >FI-SMP - [[${name}]] </title>
+    <link href="css/angular-bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles/pure-min.css"/>
+    <link rel="stylesheet" href="styles/custom.css"/>
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+            display: none !important;
+        }
+    </style>
+</head>
 
-
-            <p th:text="${elmoXml}" />
-            <p><a href="/smp/elmo">Download PDF</a></p>
-            </div>
-    </body>
+<body ng-app="review" ng-cloak="" class="ng-cloak">
+<div ng-view="" class="container"> </div>
+<script src="js/angular-bootstrap.js" type="text/javascript"></script>
+<script src="js/review.js"></script>
+</body>
 </html>

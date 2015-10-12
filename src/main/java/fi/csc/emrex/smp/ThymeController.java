@@ -140,7 +140,7 @@ public class ThymeController {
         if (person != null) {
             List<VerifiedReport> results = new ArrayList<>();
             try {
-                VerifiedReport vr = new VerifiedReport();
+                
                 builder = factory.newDocumentBuilder();
                 StringReader sr = new StringReader(decodedXml);
                 InputSource s = new InputSource(sr);
@@ -150,7 +150,7 @@ public class ThymeController {
                 document = builder.parse(s);
                 NodeList reports = document.getElementsByTagName("report");
                 for (int i = 0; i < reports.getLength(); i++) {
-
+                    VerifiedReport vr = new VerifiedReport();
                     Element report = (Element) reports.item(i);
                     vr.setReport(nodeToString(report));
                     Person elmoPerson = getUserFromElmoReport(report);

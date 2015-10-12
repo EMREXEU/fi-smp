@@ -1,6 +1,6 @@
-app = angular.module('review', ['ngRoute', 'ngCookies']);
+app = angular.module('review', ['ngRoute', 'ngCookies', 'selectedCourses', 'helper','learningReport']);
 
-app.config(function ($routeProvider, $httpProvider, $locationProvider) {
+app.config(function ($routeProvider, $httpProvider) {
 
     $routeProvider.
         when('/', {
@@ -14,9 +14,25 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 });
 
-app.controller('home', function ($scope, $http, $sce, $cookies, $timeout) {
+app.controller('home', function ($scope, $http, helperService) {
+    $scope.numberOfCourses = 0;
+    $http.post('api/reports').success(function (response) {
+        var reports = [];
+        angular.forEach(response, function(item){
+            var report = angular.fromJson(item.report).report;
+            report.verification = item.verification;
+            reports.push(report);
+        });
 
-   $scope.hello = 'jee!';
+        reports = helperService.fixReports(reports);
+
+        $scope.reports = helperService.calculateAndFilter(reports);
+        angular.forEach(reports, function(report){
+            $scope.numberOfCourses += report.numberOfCourses;
+        });
+    });
+
+    $scope.verificationLimit = 100;
 
 });
 

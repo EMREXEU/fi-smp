@@ -1,0 +1,25 @@
+<div>logohere</div><h1>Finnish Student System</h1> <!-- THIS COULD BE IN OWN VIEW... STUPID COPY PASTE THIS IS-->
+<h2>Review and approve import</h2>
+<hr/>
+<br>
+<div>{{hello}}</div>
+<h3>{{learner.fullName}} {{learner.bday.content}}</h3>
+<br>
+<div class="pure-g">
+    <div class="pure-u-1-2">
+        <fieldset>
+            <legend>Almost done!</legend>
+            <div class="custom-inline">You have selected to import</div>
+            <div class="custom-inline">{{numberOfCourses}}</div>
+            <div class="custom-inline" ng-show="numberOfCourses == 1"> course. </div>
+            <div class="custom-inline" ng-show="numberOfCourses != 1"> courses. </div>
+            Please review your selection below and approve it to import the courses to your major university results.
+        </fieldset>
+    </div>
+</div>
+<div ng-repeat="learningReport in reports | filter:courseNumberfilter">
+    <learning-report-directive report='learningReport' only-viewing=true level-filter='selectedLevel' type-filter='typeOptions'></learning-report-directive>
+</div>
+
+<div ng-bind-html="review"/>
+<a href="/norex#/">Change selection</a>

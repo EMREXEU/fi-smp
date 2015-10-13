@@ -99,6 +99,11 @@ public class ThymeController {
     public String onReturnelmo(@ModelAttribute ElmoData request, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie, @CookieValue(value = "chosenNCP") String chosenNCP, HttpServletRequest httpRequest) throws Exception {
         String sessionId = request.getSessionId();
         String elmo = request.getElmo();
+        System.out.println(elmo);
+        if (elmo == null)
+            return "onReturnAbort";
+
+
         Person person = new Person();
         person.setFirstName(httpRequest.getHeader("shib-cn"));
         person.setLastName(httpRequest.getHeader("shib-sn"));
@@ -140,7 +145,7 @@ public class ThymeController {
         if (person != null) {
             List<VerifiedReport> results = new ArrayList<>();
             try {
-                
+
                 builder = factory.newDocumentBuilder();
                 StringReader sr = new StringReader(decodedXml);
                 InputSource s = new InputSource(sr);

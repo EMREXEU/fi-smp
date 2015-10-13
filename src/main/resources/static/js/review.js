@@ -16,6 +16,12 @@ app.config(function ($routeProvider, $httpProvider) {
 
 app.controller('home', function ($scope, $http, helperService) {
     $scope.numberOfCourses = 0;
+    $scope.resultsImported = false;
+
+    $scope.import = function(){
+        $scope.resultsImported = true;
+    }
+
     $http.post('api/reports').success(function (response) {
         var reports = [];
         angular.forEach(response, function(item){

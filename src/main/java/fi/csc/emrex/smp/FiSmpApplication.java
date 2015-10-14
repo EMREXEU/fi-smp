@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @EnableAutoConfiguration(exclude = {
     org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class
 })
-public class FiSmpApplication {
+    public class FiSmpApplication {
 
     public static final String SHIB_SHIB_IDENTITY_PROVIDER = "shib-Shib-Identity-Provider";
 

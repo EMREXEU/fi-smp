@@ -1,6 +1,10 @@
 package fi.csc.emrex.smp;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -13,6 +17,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.security.PublicKey;
 import java.security.cert.CertificateFactory;
@@ -23,17 +31,34 @@ import java.util.Iterator;
  * Created by marko.hollanti on 07/10/15.
  */
 @Slf4j
+@Setter
+@Component
 public class SignatureVerifier {
 
+    public boolean verifySignatureWithDecodedData(String certificate, String encodedData, Charset charset) throws Exception {
+
+        // Instantiate the document to be signed.
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(encodedData, charset));
+
+        return doVerifySignature(certificate, doc);
+    }
+
     public boolean verifySignature(String certificate, String data) throws Exception {
-        // Create a DOM XMLSignatureFactory that will be used to generate the enveloped signature.
-        XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
 
         // Instantiate the document to be signed.
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         InputStream is = new ByteArrayInputStream(GzipUtil.gzipDecompressBytes(DatatypeConverter.parseBase64Binary(data))); // StandardCharsets.ISO_8859_1
         Document doc = dbf.newDocumentBuilder().parse(is);
+
+        return doVerifySignature(certificate, doc);
+    }
+
+    private boolean doVerifySignature(String certificate, Document doc) throws Exception {
+        // Create a DOM XMLSignatureFactory that will be used to generate the enveloped signature.
+        XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
 
         // Find Signature element.
         NodeList nl = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");

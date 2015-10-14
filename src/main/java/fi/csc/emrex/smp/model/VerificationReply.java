@@ -16,8 +16,29 @@ public class VerificationReply {
 
     private boolean verified;
 
+    private String fullNameInElmo;
+
+    private String fullNameFromHomeInstitute;
+
+
     private final List<String> messages;
 
+
+    public String getFullNameFromHomeInstitute() {
+        return fullNameFromHomeInstitute;
+    }
+
+    public void setFullNameFromHomeInstitute(String fullNameFromHomeInstitute) {
+        this.fullNameFromHomeInstitute = fullNameFromHomeInstitute;
+    }
+
+    public String getFullNameInElmo() {
+        return fullNameInElmo;
+    }
+
+    public void setFullNameInElmo(String fullNameInElmo) {
+        this.fullNameInElmo = fullNameInElmo;
+    }
 
     public VerificationReply() {
         messages = new ArrayList<String>();

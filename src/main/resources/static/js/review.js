@@ -14,12 +14,17 @@ app.config(function ($routeProvider, $httpProvider) {
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 });
 
-app.controller('home', function ($scope, $http, helperService) {
+app.controller('home', function ($scope, $http, $window, helperService) {
     $scope.numberOfCourses = 0;
     $scope.resultsImported = false;
 
     $scope.import = function(){
+        // PLACE HOLDER: IMPORT STUFF HERE
         $scope.resultsImported = true;
+    }
+
+    $scope.abort = function(){
+        $window.location.href = '/abort';
     }
 
     $http.post('api/reports').success(function (response) {

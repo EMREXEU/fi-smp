@@ -24,7 +24,14 @@ public class Person {
     private DateTimeFormatter dateFormatter;
 
     public Person() {
-        
+
+    }
+
+    public String getFullName() {
+        if (firstName != null || lastName != null)
+            return firstName + " " + lastName;
+        else
+            return null;
     }
 
     public String getFirstName() {
@@ -80,6 +87,9 @@ public class Person {
     public VerificationReply verifiy(Person otherPerson) {
         //TODO implement verification algorithm;
         VerificationReply r = new VerificationReply();
+        r.setFullNameFromHomeInstitute(this.getFullName());
+        r.setFullNameInElmo(otherPerson.getFullName());
+
         int match = 0;
         int score = 0;
         // TODO: Until we have expanded ELMO with gender...

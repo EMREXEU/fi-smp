@@ -30,11 +30,12 @@
                         <div class="custom-inline" ng-show="learningReport.numberOfCourses != 1"> courses.</div>
                         <p>
 
+
                         <p ng-show="learningReport.verification.score > verificationLimit">The name of the of the person
                             your
-                            are trying to import as, {{smpName}}, and the name of the person your are trying to import
+                            are trying to import as, <b>{{learningReport.verification.fullNameFromHomeInstitute || "undefined"}}</b>, and the name of the person your are trying to import
                             from,
-                            {{ncpName}}, doesn´t match. You will still be able to import your results but not use them
+                            <b>{{learningReport.verification.fullNameInElmo}}</b>, doesn´t match. You will still be able to import your results but not use them
                             until
                             they have been reviewed. </p>
 

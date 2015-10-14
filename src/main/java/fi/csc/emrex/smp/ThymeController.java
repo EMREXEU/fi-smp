@@ -90,6 +90,18 @@ public class ThymeController {
         }
     }
 
+    @RequestMapping(value = "/abort", method= RequestMethod.GET)
+    public String abort() throws Exception {
+        return "onReturnAbort";
+    }
+
+    @RequestMapping(value = "/smp/abort", method = RequestMethod.GET)
+    public String smpAbort() throws Exception {
+        return abort();
+    }
+
+
+
     @RequestMapping(value = "/smp/onReturn", method = RequestMethod.POST)
     public String smponReturnelmo(@ModelAttribute ElmoData request, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie, @CookieValue(value = "chosenNCP") String chosenNCP, HttpServletRequest httpRequest) throws Exception {
         return this.onReturnelmo(request, model, sessionIdCookie, chosenNCP, httpRequest);

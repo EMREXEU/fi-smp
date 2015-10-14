@@ -32,8 +32,8 @@ public class PdfGen {
     private static final float MARGIN_TOP = 100;
     private static final float MARGIN_BOTTOM = 28;
 
-    private static final Font FONT_NORMAL = new Font(FontFamily.HELVETICA, 10);
-    private static final Font FONT_BOLD = new Font(FontFamily.HELVETICA, 10, Font.BOLD);
+    private static final Font FONT_NORMAL = new Font(FontFamily.HELVETICA, 8);
+    private static final Font FONT_BOLD = new Font(FontFamily.HELVETICA, 8, Font.BOLD);
     private static final Font FONT_HEADING = new Font(FontFamily.HELVETICA, 18, Font.BOLD);
 
     public void generatePdf(String xml, String uri) throws Exception {
@@ -96,26 +96,35 @@ public class PdfGen {
 
     private void createPage(com.itextpdf.text.Document document, ElmoDocument doc) throws DocumentException {
         Paragraph p = new Paragraph();
-        p.add(new Phrase("Transcript for " + doc.getPersonName(), FONT_HEADING));
+        p.add(new Phrase("Transcript for " + doc.getPersonName() + " (" + doc.getBirthday() + ")", FONT_HEADING));
         document.add(p);
 
         p = new Paragraph();
-        p.add(new Phrase("Institution: " + doc.getInstitutionName(), FONT_HEADING));
+        p.add(new Phrase("Institution: " + doc.getInstitutionName(), FONT_BOLD));
         document.add(p);
-
-        PdfPTable table = new PdfPTable(new float[] { 15, 65, 10, 10 });
+        p = new Paragraph();
+        p.add(new Phrase(" "));
+        document.add(p);
+        PdfPTable table = new PdfPTable(new float[] { 15, 30, 15, 10, 10, 8, 8});
         table.setWidthPercentage(100);
 
         table.addCell(createHeaderCell("Code"));
-        table.addCell(createHeaderCell("Name"));
+        table.addCell(createHeaderCell("Title"));
+        table.addCell(createHeaderCell("Level"));
+        table.addCell(createHeaderCell("Type"));
         table.addCell(createHeaderCell("Credits"));
         table.addCell(createHeaderCell("Result"));
+        table.addCell(createHeaderCell("Date"));
 
         for (ElmoResult res : doc.getResults()) {
             table.addCell(createCell(res.getCode()));
             table.addCell(createCell(res.getName()));
+            table.addCell(createCell(res.getLevel()));
+            table.addCell(createCell(res.getType()));
             table.addCell(createCell(res.getCredits()));
             table.addCell(createCell(res.getResult()));
+            table.addCell(createCell(res.getDate()));
+
         }
 
         document.add(table);

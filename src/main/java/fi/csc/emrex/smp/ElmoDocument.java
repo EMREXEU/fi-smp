@@ -9,10 +9,19 @@ public class ElmoDocument {
 
     private String personName;
     private String institutionName;
+    private String birthday;
     private List<ElmoResult> results;
 
     public String getPersonName() {
         return personName;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
     public void setPersonName(String personName) {

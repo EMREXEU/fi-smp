@@ -9,6 +9,19 @@ public class ElmoResult {
     private String name;
     private String result;
     private String credits;
+    private String level;
+    private String type;
+    private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+
 
     public String getCode() {
         return code;
@@ -40,5 +53,21 @@ public class ElmoResult {
 
     public void setCredits(String credits) {
         this.credits = credits;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setLevel(String level){
+        this.level = level;
     }
 }

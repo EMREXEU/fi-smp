@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 public class Person {
 
     @Value("${smp.verification.threshold}")
-    private double threshold;
+    private double threshold ;
 
     private String firstName;
     private String lastName;
@@ -29,6 +29,14 @@ public class Person {
 
     public Person() {
 
+    }
+
+    public double getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(double threshold) {
+        this.threshold = threshold;
     }
 
     public String getFullName() {
@@ -114,7 +122,7 @@ public class Person {
         double ratio = score / this.getFullName().length();
         r.addMessage("Error ratio " + ratio + " based on Levenshtein check on name.");
         if (ratio > this.threshold) {
-            r.addMessage("Ratio over threshold.");
+            r.addMessage("Ratio over threshold "+threshold);
         } else {
             nameMatch = true;
         }

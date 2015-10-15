@@ -170,11 +170,13 @@ public class ThymeController {
 
                 builder = factory.newDocumentBuilder();
                 StringReader sr = new StringReader(decodedXml);
-                InputSource s = new InputSource(sr);
+                final InputSource inputSource = new InputSource();
+                inputSource.setEncoding(StandardCharsets.UTF_8.name());
+                inputSource.setCharacterStream(sr);
 
                 //Load and Parse the XML document
                 //document contains the complete XML as a Tree.
-                document = builder.parse(s);
+                document = builder.parse(inputSource);
                 NodeList reports = document.getElementsByTagName("report");
                 for (int i = 0; i < reports.getLength(); i++) {
                     VerifiedReport vr = new VerifiedReport();

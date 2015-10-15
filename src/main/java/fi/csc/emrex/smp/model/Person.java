@@ -7,12 +7,16 @@ package fi.csc.emrex.smp.model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  *
  * @author salum
  */
 public class Person {
+
+    @Value("${smp.verification.threshold}")
+    private double threshold;
 
     private String firstName;
     private String lastName;
@@ -28,10 +32,11 @@ public class Person {
     }
 
     public String getFullName() {
-        if (firstName != null || lastName != null)
+        if (firstName != null || lastName != null) {
             return firstName + " " + lastName;
-        else
+        } else {
             return null;
+        }
     }
 
     public String getFirstName() {
@@ -75,7 +80,7 @@ public class Person {
         this.birthDate = birthDate;
     }
 
-    public void setBirthDate(String birthDate , String dateFormat) {
+    public void setBirthDate(String birthDate, String dateFormat) {
         dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
         if (birthDate == null) {
             this.birthDate = null;
@@ -89,37 +94,33 @@ public class Person {
         VerificationReply r = new VerificationReply();
         r.setFullNameFromHomeInstitute(this.getFullName());
         r.setFullNameInElmo(otherPerson.getFullName());
-
+        boolean bdMatch = false;
+        boolean nameMatch = false;
         int match = 0;
-        int score = 0;
-        // TODO: Until we have expanded ELMO with gender...
-        if (this.getGender() != otherPerson.getGender()
-                || this.getGender() == 0 || this.getGender() == 9
-                || otherPerson.getGender() == 0 || otherPerson.getGender() == 9) {
-            r.addMessage("Added 100 to score: Gender does not match.");
-            match += 100;
-        }
-
+        LocalDate vbd = this.birthDate;
         LocalDate ebd = otherPerson.getBirthDate();
-        LocalDate vbd = this.getBirthDate();
-        if (ebd == null || vbd == null) {
-            r.addMessage("Added 100 to score: Birth date not set for " + (ebd == null ? "elmo" : "local") + " person.");
-            match += 100;
-        } else if (!ebd.equals(vbd)) {
-            r.addMessage("Added 100 to score: Birth date does not match.");
-            match += 100;
-        }
 
+        if (ebd == null || vbd == null) {
+            r.addMessage("Birth date not set for " + (ebd == null ? "elmo" : "local") + " person.");
+        } else if (!ebd.equals(vbd)) {
+            r.addMessage("Birth date does not match.");
+
+        } else {
+            bdMatch = true;
+        }
+        double score = 0;
         score += levenshteinDistance(this.getLastName(), otherPerson.getLastName());
         score += levenshteinDistance(this.getFirstName(), otherPerson.getFirstName());
-
-        if (score > 0) {
-            r.addMessage("Added " + score + " to score based on Levenshtein check on name.");
+        double ratio = score / this.getFullName().length();
+        r.addMessage("Error ratio " + ratio + " based on Levenshtein check on name.");
+        if (ratio > this.threshold) {
+            r.addMessage("Ratio over threshold.");
+        } else {
+            nameMatch = true;
         }
 
-        match += score;
+        r.setVerified(bdMatch && nameMatch);
 
-        r.setScore(match);
         return r;
     }
 

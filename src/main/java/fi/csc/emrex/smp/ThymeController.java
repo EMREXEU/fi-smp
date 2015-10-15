@@ -120,13 +120,13 @@ public class ThymeController {
         if (elmo == null)
             return "onReturnAbort";
 
-        if(context.getSession().getAttribute("shibPerson")==null){
+
         Person person = new Person();
         person.setFirstName(httpRequest.getHeader("shib-cn"));
         person.setLastName(httpRequest.getHeader("shib-sn"));
         person.setGender(httpRequest.getHeader("shib-schacGender"));
         person.setBirthDate(httpRequest.getHeader("shib-schacDateOfBirth"), "YYYYMMDD");
-
+        if(context.getSession().getAttribute("shibPerson")==null){
         context.getSession().setAttribute("shibPerson", person);
         }
         final byte[] bytes = DatatypeConverter.parseBase64Binary(elmo);

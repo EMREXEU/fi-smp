@@ -133,7 +133,7 @@ public class ThymeController {
         final String decodedXml = GzipUtil.gzipDecompress(bytes);
 
         // TODO charset problems UTF-8 vs UTF-16
-        final boolean verifySignatureResult = signatureVerifier.verifySignatureWithDecodedData(getCertificate(), decodedXml, StandardCharsets.UTF_16);
+        final boolean verifySignatureResult = signatureVerifier.verifySignatureWithDecodedData(getCertificate(), decodedXml, StandardCharsets.UTF_8);
         log.info("Verify signature result: {}", verifySignatureResult);
 
         System.out.println("providedSessionId: " + sessionId);

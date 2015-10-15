@@ -82,7 +82,7 @@ public class Person {
 
     public void setBirthDate(String birthDate, String dateFormat) {
         dateFormatter = DateTimeFormatter.ofPattern(dateFormat);
-        if (birthDate == null) {
+        if (birthDate == null || dateFormat == null) {
             this.birthDate = null;
         } else {
             this.birthDate = LocalDate.parse(birthDate, dateFormatter);

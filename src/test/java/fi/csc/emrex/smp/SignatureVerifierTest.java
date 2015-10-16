@@ -17,15 +17,16 @@ public class SignatureVerifierTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         instance = new SignatureVerifier();
+        instance.setCertificatePath("csc-cert.crt");
+        instance.setEnvironment("dev");
     }
 
     @Test
     public void testVerifySignature() throws Exception {
 
-        final String cert = TestUtil.getFileContent("csc-cert.crt");
         final String dataOk = TestUtil.getFileContent("elmo_vastaus_base64_gzipped.txt");
 
-        assertTrue(instance.verifySignature(cert, dataOk));
+        assertTrue(instance.verifySignature(dataOk));
 
     }
 }

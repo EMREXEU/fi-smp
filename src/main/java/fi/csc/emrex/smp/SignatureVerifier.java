@@ -35,17 +35,25 @@ import java.util.Iterator;
 @Component
 public class SignatureVerifier {
 
-    public boolean verifySignatureWithDecodedData(String certificate, String encodedData, Charset charset) throws Exception {
+    private String certificate;
+
+    @Value("${path.certificate}")
+    private String certificatePath;
+
+    @Value("${environment}")
+    private String environment;
+
+    public boolean verifySignatureWithDecodedData(String encodedData, Charset charset) throws Exception {
 
         // Instantiate the document to be signed.
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         Document doc = dbf.newDocumentBuilder().parse(IOUtils.toInputStream(encodedData, charset));
 
-        return doVerifySignature(certificate, doc);
+        return doVerifySignature(doc);
     }
 
-    public boolean verifySignature(String certificate, String data) throws Exception {
+    public boolean verifySignature(String data) throws Exception {
 
         // Instantiate the document to be signed.
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -53,10 +61,13 @@ public class SignatureVerifier {
         InputStream is = new ByteArrayInputStream(GzipUtil.gzipDecompressBytes(DatatypeConverter.parseBase64Binary(data))); // StandardCharsets.ISO_8859_1
         Document doc = dbf.newDocumentBuilder().parse(is);
 
-        return doVerifySignature(certificate, doc);
+        return doVerifySignature(doc);
     }
 
-    private boolean doVerifySignature(String certificate, Document doc) throws Exception {
+    private boolean doVerifySignature(Document doc) throws Exception {
+
+        assertCertificateAvailable();
+
         // Create a DOM XMLSignatureFactory that will be used to generate the enveloped signature.
         XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
 
@@ -92,6 +103,17 @@ public class SignatureVerifier {
         }
 
         return coreValidity;
+    }
+
+    private void assertCertificateAvailable() throws Exception {
+        if (certificate == null) {
+            certificate = readFileContent(certificatePath);
+        }
+    }
+
+    private String readFileContent(String path) throws Exception {
+        return environment.equalsIgnoreCase("dev") ? FileReader.getFileContent(path) :
+                new String(Files.readAllBytes(Paths.get(path)));
     }
 
     private static X509Certificate getCertificate(String certString) throws IOException, GeneralSecurityException {

@@ -116,7 +116,6 @@ public class ThymeController {
     public String onReturnelmo(@ModelAttribute ElmoData request, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie, @CookieValue(value = "chosenNCP") String chosenNCP, HttpServletRequest httpRequest) throws Exception {
         String sessionId = request.getSessionId();
         String elmo = request.getElmo();
-        System.out.println(elmo);
 
         if (elmo == null) {
             return "onReturnAbort";
@@ -134,7 +133,7 @@ public class ThymeController {
         final String decodedXml = GzipUtil.gzipDecompress(bytes);
 
         // TODO charset problems UTF-8 vs UTF-16
-        final boolean verifySignatureResult = signatureVerifier.verifySignatureWithDecodedData(decodedXml, StandardCharsets.UTF_8);
+        final boolean verifySignatureResult = signatureVerifier.verifySignatureWithDecodedData(getCertificate(), decodedXml, StandardCharsets.UTF_8);
         log.info("Verify signature result: {}", verifySignatureResult);
 
         System.out.println("providedSessionId: " + sessionId);
@@ -213,6 +212,24 @@ public class ThymeController {
             return "error";
         }
         return "review";
+    }
+
+
+    // FIXME serti jostain muualta
+    private String getCertificate() {
+        return "-----BEGIN CERTIFICATE-----\n" +
+                "MIIB+TCCAWICCQDiZILVgSkjojANBgkqhkiG9w0BAQUFADBBMQswCQYDVQQGEwJG\n" +
+                "STERMA8GA1UECAwISGVsc2lua2kxETAPBgNVBAcMCEhlbHNpbmtpMQwwCgYDVQQK\n" +
+                "DANDU0MwHhcNMTUwMjA1MTEwNTI5WhcNMTgwNTIwMTEwNTI5WjBBMQswCQYDVQQG\n" +
+                "EwJGSTERMA8GA1UECAwISGVsc2lua2kxETAPBgNVBAcMCEhlbHNpbmtpMQwwCgYD\n" +
+                "VQQKDANDU0MwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMyVVTyGT1Cp8z1f\n" +
+                "jYEO93HEtIpFKnb/tvPb6Ee5b8m8lnuv6YWsF8DBWPVfsOq0KCWD8zE1yD+w+xxM\n" +
+                "mp6+zATp089PUrEUYawG/tGu9OG+EX+nhOAj0SBvGHEkXh6lGJgeGxbdFVwZePAN\n" +
+                "135ra5L3gYcwYBVOuEyYFZJp7diHAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAP2E9\n" +
+                "YD7djCum5UYn1Od9Z1w55j+SuKRWMnTR3yzy1PXJjb2dGqNcV9tEhdbqWbwTnNfl\n" +
+                "6sidCnd1U0p4XdLjg28me8ZmfftH+QU4LkwSFSyF4ajoTFC3QHD0xTtGpQIT/rAD\n" +
+                "x/59fhfX5icydMzzNulwXJWImtXq2/AX43/yR+M=\n" +
+                "-----END CERTIFICATE-----";
     }
 
     /**

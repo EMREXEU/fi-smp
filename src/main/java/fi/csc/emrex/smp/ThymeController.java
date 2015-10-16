@@ -117,9 +117,10 @@ public class ThymeController {
         String sessionId = request.getSessionId();
         String elmo = request.getElmo();
         System.out.println(elmo);
-        if (elmo == null)
-            return "onReturnAbort";
 
+        if (elmo == null) {
+            return "onReturnAbort";
+        }
 
         Person person = new Person();
         person.setFirstName(httpRequest.getHeader("shib-cn"));
@@ -159,7 +160,7 @@ public class ThymeController {
         }
         context.getSession().setAttribute("elmoxmlstring", decodedXml);
         model.addAttribute("elmoXml", decodedXml);
-        //System.out.println(decodedXml);
+
         Document document;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         //Get the DOM Builder

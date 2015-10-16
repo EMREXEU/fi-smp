@@ -7,6 +7,8 @@ package fi.csc.emrex.smp.model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -119,7 +121,7 @@ public class Person {
         double score = 0;
         score += levenshteinDistance(this.getLastName(), otherPerson.getLastName());
         score += levenshteinDistance(this.getFirstName(), otherPerson.getFirstName());
-        double ratio = score / this.getFullName().length();
+        double ratio = StringUtils.isNotBlank(this.getFullName()) ? score / this.getFullName().length() : 0.0;
         r.addMessage("Error ratio " + ratio + " based on Levenshtein check on name.");
         if (ratio > this.threshold) {
             r.addMessage("Ratio over threshold "+threshold);

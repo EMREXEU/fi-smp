@@ -17,33 +17,34 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- *
  * @author salum
  */
 @Controller
 public class PDFController {
 
-    @Autowired
-    private HttpServletRequest context;
+  @Autowired
+  private HttpServletRequest context;
 
-    @RequestMapping(value="/smp/elmo", method= RequestMethod.GET)
-    @ResponseBody
-    public FileSystemResource smpelmo( HttpServletResponse response, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie) throws Exception{
-        return  this.elmo(response, model, sessionIdCookie);
-    }
-    @RequestMapping(value="/elmo", method= RequestMethod.GET)
-    @ResponseBody
-    public FileSystemResource elmo( HttpServletResponse response, Model model, @CookieValue(value = "elmoSessionId") String sessionIdCookie) throws Exception{
+  @RequestMapping(value = "/smp/elmo", method = RequestMethod.GET)
+  @ResponseBody
+  public FileSystemResource smpelmo(HttpServletResponse response, Model model,
+      @CookieValue(value = "elmoSessionId") String sessionIdCookie) throws Exception {
+    return this.elmo(response, model, sessionIdCookie);
+  }
 
+  @RequestMapping(value = "/elmo", method = RequestMethod.GET)
+  @ResponseBody
+  public FileSystemResource elmo(HttpServletResponse response, Model model,
+      @CookieValue(value = "elmoSessionId") String sessionIdCookie) throws Exception {
 
-        final String decodedXml = (String) context.getSession().getAttribute("elmoxmlstring");
+    final String decodedXml = (String) context.getSession().getAttribute("elmoxmlstring");
 
-        new PdfGen().generatePdf(decodedXml, "/tmp/elmo.pdf");
+    new PdfGen().generatePdf(decodedXml, "/tmp/elmo.pdf");
 
-        response.setHeader("Content-disposition", "attachment;filename=elmo.pdf");
-        response.setContentType("application/pdf");
+    response.setHeader("Content-disposition", "attachment;filename=elmo.pdf");
+    response.setContentType("application/pdf");
 
-        return new FileSystemResource("/tmp/elmo.pdf");
-    }
+    return new FileSystemResource("/tmp/elmo.pdf");
+  }
 
 }

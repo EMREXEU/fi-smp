@@ -5,22 +5,22 @@ package fi.csc.emrex.smp;
  */
 public class ElmoData {
 
-    private String sessionId;
-    private String elmo;
+  private String sessionId;
+  private String elmo;
 
-    public String getSessionId() {
-        return sessionId;
-    }
+  public String getSessionId() {
+    return sessionId;
+  }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
+  public void setSessionId(String sessionId) {
+    this.sessionId = sessionId;
+  }
 
-    public String getElmo() {
-        return elmo;
-    }
+  public String getElmo() {
+    return elmo;
+  }
 
-    public void setElmo(String elmo) {
-        this.elmo = elmo;
-    }
+  public void setElmo(String elmo) {
+    this.elmo = elmo;
+  }
 }

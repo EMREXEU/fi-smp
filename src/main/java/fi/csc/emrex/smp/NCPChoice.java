@@ -7,29 +7,29 @@
 package fi.csc.emrex.smp;
 
 /**
- *
  * @author salum
  */
 public class NCPChoice {
-    private int ID;
-    private String url;
 
-    public int getID() {
-        return ID;
-    }
+  private int ID;
+  private String url;
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
+  public int getID() {
+    return ID;
+  }
+
+  public void setID(int ID) {
+    this.ID = ID;
+  }
 
 
-    public String getUrl() {
-        return url;
-    }
+  public String getUrl() {
+    return url;
+  }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-    
-    
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+
 }

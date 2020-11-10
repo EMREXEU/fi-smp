@@ -1,33 +1,34 @@
 package fi.csc.emrex.smp.util;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import org.apache.commons.io.FileUtils;
 
 /**
  * Created by marko.hollanti on 06/10/15.
  */
 public class TestUtil {
 
-    private final static String ENCODING = StandardCharsets.UTF_8.name();
+  private final static String ENCODING = StandardCharsets.UTF_8.name();
 
-    private static TestUtil instance;
+  private static TestUtil instance;
 
-    private TestUtil() {
+  private TestUtil() {
+  }
+
+  public static String getFileContent(String filename) throws Exception {
+    if (instance == null) {
+      instance = new TestUtil();
     }
+    return FileUtils
+        .readFileToString(FileUtils.toFile(instance.getClass().getResource("/" + filename)),
+            ENCODING);
+  }
 
-    public static String getFileContent(String filename) throws Exception {
-        if (instance == null) {
-            instance = new TestUtil();
-        }
-        return FileUtils.readFileToString(FileUtils.toFile(instance.getClass().getResource("/" + filename)), ENCODING);
+  public static File getFile(String filename) throws Exception {
+    if (instance == null) {
+      instance = new TestUtil();
     }
-
-    public static File getFile(String filename) throws Exception {
-        if (instance == null) {
-            instance = new TestUtil();
-        }
-        return FileUtils.toFile(instance.getClass().getResource("/" + filename));
-    }
+    return FileUtils.toFile(instance.getClass().getResource("/" + filename));
+  }
 }

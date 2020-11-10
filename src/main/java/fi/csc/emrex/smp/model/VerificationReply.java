@@ -10,78 +10,78 @@ import java.util.List;
 
 public class VerificationReply {
 
-    private String sessionId;
+  private String sessionId;
 
-    private int score;
+  private int score;
 
-    private boolean verified;
+  private boolean verified;
 
-    private String fullNameInElmo;
+  private String fullNameInElmo;
 
-    private String fullNameFromHomeInstitute;
-
-
-    private final List<String> messages;
+  private String fullNameFromHomeInstitute;
 
 
-    public String getFullNameFromHomeInstitute() {
-        return fullNameFromHomeInstitute;
-    }
-
-    public void setFullNameFromHomeInstitute(String fullNameFromHomeInstitute) {
-        this.fullNameFromHomeInstitute = fullNameFromHomeInstitute;
-    }
-
-    public String getFullNameInElmo() {
-        return fullNameInElmo;
-    }
-
-    public void setFullNameInElmo(String fullNameInElmo) {
-        this.fullNameInElmo = fullNameInElmo;
-    }
-
-    public VerificationReply() {
-        messages = new ArrayList<String>();
-    }
+  private final List<String> messages;
 
 
-    public String getSessionId() {
-        return sessionId;
-    }
+  public String getFullNameFromHomeInstitute() {
+    return fullNameFromHomeInstitute;
+  }
+
+  public void setFullNameFromHomeInstitute(String fullNameFromHomeInstitute) {
+    this.fullNameFromHomeInstitute = fullNameFromHomeInstitute;
+  }
+
+  public String getFullNameInElmo() {
+    return fullNameInElmo;
+  }
+
+  public void setFullNameInElmo(String fullNameInElmo) {
+    this.fullNameInElmo = fullNameInElmo;
+  }
+
+  public VerificationReply() {
+    messages = new ArrayList<String>();
+  }
 
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
+  public String getSessionId() {
+    return sessionId;
+  }
 
 
-    public int getScore() {
-        return score;
-    }
+  public void setSessionId(String sessionId) {
+    this.sessionId = sessionId;
+  }
 
 
-    public void setScore(int score) {
-        this.score = score;
-    }
+  public int getScore() {
+    return score;
+  }
 
 
-    public boolean isVerified() {
-        return verified;
-    }
+  public void setScore(int score) {
+    this.score = score;
+  }
 
 
-    public void setVerified(boolean verified) {
-        this.verified = verified;
-    }
+  public boolean isVerified() {
+    return verified;
+  }
 
 
-    public List<String> getMessages() {
-        return messages;
-    }
+  public void setVerified(boolean verified) {
+    this.verified = verified;
+  }
 
 
-    public void addMessage(String msg) {
-        messages.add(msg);
-    }
+  public List<String> getMessages() {
+    return messages;
+  }
+
+
+  public void addMessage(String msg) {
+    messages.add(msg);
+  }
 
 }

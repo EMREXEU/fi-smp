@@ -1,5 +1,7 @@
 package fi.csc.emrex.smp;
 
+import fi.csc.emrex.smp.dto.NCPChoice;
+import fi.csc.emrex.smp.dto.NCPResult;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;

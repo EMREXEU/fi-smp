@@ -3,8 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fi.csc.emrex.smp;
+package fi.csc.emrex.smp.controller;
 
+import fi.csc.emrex.smp.FiSmpApplication;
+import fi.csc.emrex.smp.dto.NCPChoice;
+import fi.csc.emrex.smp.dto.NCPResult;
+import fi.csc.emrex.smp.dto.SessionData;
 import fi.csc.emrex.smp.model.VerifiedReport;
 import java.net.URI;
 import java.net.URISyntaxException;

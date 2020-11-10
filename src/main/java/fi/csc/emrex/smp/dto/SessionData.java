@@ -1,4 +1,4 @@
-package fi.csc.emrex.smp;
+package fi.csc.emrex.smp.dto;
 
 /**
  * Created by jpentika on 08/10/15.

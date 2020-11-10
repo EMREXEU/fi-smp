@@ -1,4 +1,4 @@
-package fi.csc.emrex.smp;
+package fi.csc.emrex.smp.dto;
 
 import java.util.List;
 

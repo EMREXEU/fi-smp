@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fi.csc.emrex.smp;
+package fi.csc.emrex.smp.controller;
 
+import fi.csc.emrex.smp.util.PdfGen;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package fi.csc.emrex.smp;
+package fi.csc.emrex.smp.util;
 
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
@@ -10,6 +10,9 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import fi.csc.emrex.smp.dto.ElmoDocument;
+import fi.csc.emrex.smp.dto.ElmoResult;
+import fi.csc.emrex.smp.util.ElmoXmlImportHelper;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;

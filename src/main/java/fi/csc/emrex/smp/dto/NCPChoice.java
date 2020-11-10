@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package fi.csc.emrex.smp;
+package fi.csc.emrex.smp.dto;
 
 /**
  * @author salum

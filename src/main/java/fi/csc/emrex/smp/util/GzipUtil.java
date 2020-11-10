@@ -1,4 +1,4 @@
-package fi.csc.emrex.smp;
+package fi.csc.emrex.smp.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

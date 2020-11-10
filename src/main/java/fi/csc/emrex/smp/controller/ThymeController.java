@@ -3,8 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fi.csc.emrex.smp;
+package fi.csc.emrex.smp.controller;
 
+import fi.csc.emrex.smp.dto.ElmoData;
+import fi.csc.emrex.smp.FiSmpApplication;
+import fi.csc.emrex.smp.util.GzipUtil;
+import fi.csc.emrex.smp.util.SignatureVerifier;
 import fi.csc.emrex.smp.model.Person;
 import fi.csc.emrex.smp.model.VerificationReply;
 import fi.csc.emrex.smp.model.VerifiedReport;

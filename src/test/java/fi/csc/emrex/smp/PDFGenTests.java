@@ -1,6 +1,8 @@
 package fi.csc.emrex.smp;
 
 
+import fi.csc.emrex.smp.util.PdfGen;
+import fi.csc.emrex.smp.util.SignatureVerifier;
 import fi.csc.emrex.smp.util.TestUtil;
 import junit.framework.TestCase;
 import org.junit.Test;

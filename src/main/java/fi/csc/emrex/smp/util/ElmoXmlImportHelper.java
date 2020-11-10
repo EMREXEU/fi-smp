@@ -1,9 +1,11 @@
-package fi.csc.emrex.smp;
+package fi.csc.emrex.smp.util;
 
 /**
  * Created by marko.hollanti on 20/08/15.
  */
 
+import fi.csc.emrex.smp.dto.ElmoDocument;
+import fi.csc.emrex.smp.dto.ElmoResult;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.xpath.XPath;

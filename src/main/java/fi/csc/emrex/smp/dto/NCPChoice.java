@@ -6,30 +6,22 @@
 
 package fi.csc.emrex.smp.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author salum
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class NCPChoice {
 
   private int ID;
   private String url;
-
-  public int getID() {
-    return ID;
-  }
-
-  public void setID(int ID) {
-    this.ID = ID;
-  }
-
-
-  public String getUrl() {
-    return url;
-  }
-
-  public void setUrl(String url) {
-    this.url = url;
-  }
-
-
 }

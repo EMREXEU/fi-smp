@@ -129,6 +129,13 @@
       <version>2.3.0</version>
     </dependency>
 
+    <!--TODO: remove after spring-boot 2.3 migration-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-properties-migrator</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -248,5 +255,5 @@
     </plugins>
 
   </build>
-  
+
 </project>

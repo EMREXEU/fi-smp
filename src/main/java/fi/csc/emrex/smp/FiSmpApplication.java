@@ -16,12 +16,8 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 
-@SpringBootApplication
-
-@EnableAutoConfiguration(exclude = {
-    org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class
-})
-    public class FiSmpApplication {
+@SpringBootApplication(exclude = org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class)
+public class FiSmpApplication {
 
     public static final String SHIB_SHIB_IDENTITY_PROVIDER = "shib-Shib-Identity-Provider";
 

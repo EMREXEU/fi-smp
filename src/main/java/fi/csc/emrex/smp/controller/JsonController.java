@@ -40,10 +40,11 @@ public class JsonController {
   @Autowired
   private HttpServletRequest context;
 
+  @Deprecated
   @RequestMapping("/smp/api/smp")
   @ResponseBody
   public List<NCPResult> smpncps() throws Exception {
-    return this.ncps();
+    return this.fetchNcpsFromEmregJson();
   }
 
   @RequestMapping(value = "/smp/api/sessiondata", method = RequestMethod.POST)
@@ -68,7 +69,7 @@ public class JsonController {
 
   @RequestMapping("/api/smp")
   @ResponseBody
-  public List<NCPResult> ncps() throws Exception {
+  public List<NCPResult> fetchNcpsFromEmregJson() throws Exception {
     List<NCPResult> results;
     results = (List<NCPResult>) context.getSession().getAttribute("ncps");
     if (results == null) {
@@ -78,24 +79,26 @@ public class JsonController {
     return results;
   }
 
+  @Deprecated
   @RequestMapping("/smp/api/emreg")
   @ResponseBody
   public String smpemreg() throws URISyntaxException {
-    return emreg();
+    return fetchNcpsFromEmreg();
   }
 
   @RequestMapping("/api/emreg")
   @ResponseBody
-  public String emreg() throws URISyntaxException {
-    String emreg = (String) context.getSession().getAttribute("emreg");
-    if (emreg == null) {
+  public String fetchNcpsFromEmreg() throws URISyntaxException {
+    String ncpsInJson = (String) context.getSession().getAttribute("emreg");
+    if (ncpsInJson == null) {
       RestTemplate template = new RestTemplate();
-      emreg = template.getForObject(new URI(emregUrl), String.class);
-      context.getSession().setAttribute("emreg", emreg);
+      ncpsInJson = template.getForObject(new URI(emregUrl), String.class);
+      context.getSession().setAttribute("emreg", ncpsInJson);
     }
-    return emreg;
+    return ncpsInJson;
   }
 
+  @Deprecated
   @RequestMapping("/smp/api/reports")
   @ResponseBody
   public List<VerifiedReport> smpreports() {
@@ -108,6 +111,7 @@ public class JsonController {
     return (List<VerifiedReport>) this.context.getSession().getAttribute("reports");
   }
 
+  @Deprecated
   private void printAttributes(HttpServletRequest request) {
     if (request != null) {
 

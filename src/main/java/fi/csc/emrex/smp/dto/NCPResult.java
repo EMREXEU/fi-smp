@@ -21,3 +21,4 @@ public class NCPResult {
   private String url;
   private String certificate;
 }
+W
